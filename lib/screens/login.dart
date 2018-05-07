@@ -8,37 +8,81 @@ class login extends StatefulWidget{
   }
 }
 
+void _entrar(context){
+  Navigator.of(context).pushNamed('/backers');
+}
+
+void _cancelar(){
+
+}
+
 class loginState extends State<login>{
-
-
   
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Center(
+    return new Center(
         child: new Container(
-          constraints: new BoxConstraints.expand(),
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(colors: [CurrentTheme.gradientStart, CurrentTheme.gradientEnd],
-                begin: const FractionalOffset(1.0, 0.0),
-                end: const FractionalOffset(0.0, 1.0),
-                stops: [0.0,1.0],
-                tileMode: TileMode.clamp
-            ),
-          ),
-          padding: new EdgeInsets.all(100.0),
-          child: new Container(
-            decoration: new BoxDecoration(
-                //color: _semiTranlucent.withOpacity(0.2),
-                borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(40.0),
-                    topRight: const Radius.circular(40.0)
-                )
-            ),
+          child: new Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child :new Text('Entre com seu Login e Senha', textAlign: TextAlign.center, style: new TextStyle(
+                      color: CurrentTheme.textColor,
+                      fontSize: 20.0,
+                    ),
+                    ),
+                  ),
+                  new Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: new TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: new InputDecoration(
+                        labelText: 'Email',
+                          contentPadding: new EdgeInsets.all(15.0),
+                          hintText: 'Insira o seu email cadastrado'
+                      ),
+                    ),
+                  ),
 
+                  new Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: new TextField(
+                      obscureText: true,
+                      decoration: new InputDecoration(
+                          labelText: 'Senha',
+                          contentPadding: new EdgeInsets.all(15.0),
+                          hintText: 'Insira a sua senha'
+                      ),
+                    ),
+                  ),
+
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Container(
+                          padding: new EdgeInsets.all(5.0),
+                          child: new RaisedButton(child: new Text('Entrar'),onPressed: (){_entrar(context);}),
+                      ),
+                      new Container(
+                          padding: new EdgeInsets.all(5.0),
+                          child: new RaisedButton(child: new Text('Cancelar'),onPressed: (){_cancelar();})
+                      ),
+                    ],
+                  )
+                ],
+              ),
+          ),
+          decoration: new BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: new BorderRadius.only(
+                  topLeft: const Radius.circular(5.0),
+                  topRight: const Radius.circular(5.0)
+              )
           ),
         ),
-      ),
-    );
+      );
   }
 }

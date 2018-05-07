@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
+import 'package:i_love_pao/screens/login.dart';
 
 class home extends StatefulWidget {
   @override
@@ -30,24 +31,13 @@ class homeState extends State<home>{
     showDialog(context: context, child:
       new SimpleDialog(
         children: <Widget>[
-          loginPane
+          new login()
         ],
       )
     );
   }
   var loginPane = new Container(
-    child: new Column(
-      children: <Widget>[
-        new Text('texto')
-      ],
-    ),
-    decoration: new BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(5.0),
-            topRight: const Radius.circular(5.0)
-        )
-    ),
+
   );
 
   @override
