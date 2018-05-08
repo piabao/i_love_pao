@@ -29,6 +29,12 @@ flutter:
   assets:
    - images/info.png
    - images/icone1.png
+   - images/backer_0001.jpg
+   - images/backer_0002.jpg
+   - images/backer_0003.jpg
+   - images/backer_0004.jpg
+   - images/backer_0005.jpg
+   - images/backer_0006.jpg
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

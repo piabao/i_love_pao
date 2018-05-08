@@ -4,6 +4,13 @@ class Backer{
   String _name;
   String _icon;
   Address _address;
+  bool _favorite = false;
+
+  Backer(String name, String icon, Address add){
+    this._address = add;
+    this._name = name;
+    this._icon = icon;
+  }
 
   Address get address => _address;
 
@@ -21,6 +28,12 @@ class Backer{
 
   set name(String value) {
     _name = value;
+  }
+
+  bool get favorite => _favorite;
+
+  set favorite(bool value) {
+    _favorite = value;
   }
 
 }

@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/screens/login.dart';
 
-class home extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new homeState();
-  }
-}
+class home extends StatelessWidget {
 
-class homeState extends State<home>{
-
-  String _title = 'Bem Vindo';
+  String _title = 'Seja Bem Vindo';
 
   static void _onPressed(){
 
@@ -20,7 +13,12 @@ class homeState extends State<home>{
   var comecarPane = new Container(
     child: new Column(
       children: <Widget>[
-        new RaisedButton(padding : new EdgeInsets.all(30.0), color : CurrentTheme.botaoAcao, child: new Text('Começar'), onPressed: (){_onPressed();}),
+        new RaisedButton(
+            padding : new EdgeInsets.all(30.0),
+            color : CurrentTheme.botaoAcao,
+            child: new Text('Começar'),
+            onPressed: (){_onPressed();}
+            ),
       ],
     ),
     margin: const EdgeInsets.all(10.0),

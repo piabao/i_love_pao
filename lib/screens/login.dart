@@ -12,8 +12,8 @@ void _entrar(context){
   Navigator.of(context).pushNamed('/backers');
 }
 
-void _cancelar(){
-
+void _cancelar(context){
+  Navigator.pop(context);
 }
 
 class loginState extends State<login>{
@@ -68,7 +68,7 @@ class loginState extends State<login>{
                       ),
                       new Container(
                           padding: new EdgeInsets.all(5.0),
-                          child: new RaisedButton(child: new Text('Cancelar'),onPressed: (){_cancelar();})
+                          child: new RaisedButton(child: new Text('Cancelar'),onPressed: (){_cancelar(context);})
                       ),
                     ],
                   )
