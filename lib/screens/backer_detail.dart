@@ -12,24 +12,30 @@ class Details extends StatelessWidget{
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Container(
-          constraints: new BoxConstraints.expand(),
-          color: new Color(0xFF736AB7),
-            child: new Stack (
-              children: <Widget>[
-                _getBackground(),
-                _getGradient(),
-                _getContent(),
-                _getToolbar(context),
-              ],
-            ),
+        constraints: new BoxConstraints.expand(),
+        decoration: new BoxDecoration(
+          gradient: new LinearGradient(colors: [new Color(0xCCffd162), new Color(0xCCf1fba6)],
+            begin: const FractionalOffset(1.0, 0.0),
+            end: const FractionalOffset(0.0, 1.0),
+            stops: [0.0,1.0],
+            tileMode: TileMode.clamp
           ),
+        ),
+        child: new Stack (
+          children: <Widget>[
+            _getBackground(),
+            _getContent(),
+            _getToolbar(context),
+          ],
+        ),
+      ),
     );
   }
 
   Container _getBackground () {
       return new Container(
           child: new ClipPath(
-            child: new Image.asset(backer.icon),
+            child: new Image.asset(backer.detailImage),
             clipper: new BottomWaveClipper(),
           )
       );
@@ -44,24 +50,6 @@ class Details extends StatelessWidget{
                         .top),
                 child: new BackButton(color: Colors.white),
               );
-      }
-
-  Container _getGradient() {
-        return new Container(
-          margin: new EdgeInsets.only(top: 190.0),
-          height: 110.0,
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              colors: <Color>[
-                new Color(0x00736AB7),
-                new Color(0xFF736AB7)
-              ],
-              stops: [0.0, 0.9],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.0, 1.0),
-            ),
-          ),
-        );
       }
 
   Widget _getContent() {

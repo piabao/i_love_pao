@@ -88,7 +88,7 @@ class StateItem extends State<BackerItem>{
       height: 124.0,
       margin: new EdgeInsets.only(left: 46.0),
       decoration: new BoxDecoration(
-        color: new Color(0xFF333366),
+        color: new Color(0xFFff841f),//(0xFF333366),
         shape: BoxShape.rectangle,
         borderRadius: new BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[
@@ -104,10 +104,10 @@ class StateItem extends State<BackerItem>{
         leading: new IconButton(
             icon: item.favorite ? new Icon(Icons.favorite): new Icon(Icons.favorite_border),
             onPressed: (){onFavorite();},
-            color: item.favorite ? Colors.red : Colors.black,
+            color: item.favorite ? new Color(0xFFe50000) : Colors.black,
             ),
         title: new Text(item.name, style: new TextStyle(color: Colors.white, fontWeight: FontWeight.w500),),
-        subtitle: new Text(item.address.city+', '+item.address.district, style: new TextStyle(color: Colors.lightBlue)),
+        subtitle: new Text(item.address.city+', '+item.address.district, style: new TextStyle(color: new Color(0xFF330808))),
       ),
     );
   }

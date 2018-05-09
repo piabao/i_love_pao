@@ -5,11 +5,19 @@ class Backer{
   String _icon;
   Address _address;
   bool _favorite = false;
+  String _detailImage;
 
-  Backer(String name, String icon, Address add){
+  Backer(String name, String icon, String detailImage, Address add){
+    this._detailImage = detailImage;
     this._address = add;
     this._name = name;
     this._icon = icon;
+  }
+
+  String get detailImage => _detailImage;
+
+  set detailImage(String value) {
+    _detailImage = value;
   }
 
   Address get address => _address;
