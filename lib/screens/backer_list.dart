@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/screens/backer_detail.dart';
+import 'package:i_love_pao/screens/util/card.dart';
 
 import 'package:i_love_pao/database/backerListMock.dart';
 
@@ -16,12 +17,14 @@ class backerList extends StatelessWidget{
     return new BackerItem(
       item: _list[index],
       onTap: () {
-        print('Opa');
         var item =  _list[index];
-        Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(item)));
-//        Navigator.of(context).pushNamed('/details/$item');
+        Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(backer: item)));
       }
     );
+  }
+
+  void onFilter(){
+
   }
 
   @override
@@ -29,6 +32,45 @@ class backerList extends StatelessWidget{
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Minhas Padarias'),
+        backgroundColor: new Color(0xFF330808),
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.filter), onPressed: (){onFilter();}),
+        ],
+      ),
+      drawer: new Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the Drawer if there isn't enough vertical
+        // space to fit everything.
+        child: new ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            new DrawerHeader(
+              child: new Text('Drawer Header'),
+              decoration: new BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            new ListTile(
+              title: new Text('Item 1'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            new ListTile(
+              title: new Text('Item 2'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: new Container(
         padding: const EdgeInsets.all(16.0),
@@ -77,41 +119,6 @@ class StateItem extends State<BackerItem>{
     );
   }
 
-  void onFavorite(){
-    setState((){
-       item.favorite = !item.favorite;
-    });
-  }
-
-  Widget getCard(){
-    return new Container(
-      height: 124.0,
-      margin: new EdgeInsets.only(left: 46.0),
-      decoration: new BoxDecoration(
-        color: new Color(0xFFff841f),//(0xFF333366),
-        shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.circular(8.0),
-        boxShadow: <BoxShadow>[
-          new BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10.0,
-            offset: new Offset(0.0, 10.0),
-          ),
-        ],
-      ),
-      padding: new EdgeInsets.only(left: 20.0),
-      child: new ListTile(
-        leading: new IconButton(
-            icon: item.favorite ? new Icon(Icons.favorite): new Icon(Icons.favorite_border),
-            onPressed: (){onFavorite();},
-            color: item.favorite ? new Color(0xFFe50000) : Colors.black,
-            ),
-        title: new Text(item.name, style: new TextStyle(color: Colors.white, fontWeight: FontWeight.w500),),
-        subtitle: new Text(item.address.city+', '+item.address.district, style: new TextStyle(color: new Color(0xFF330808))),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Padding(
@@ -126,7 +133,7 @@ class StateItem extends State<BackerItem>{
               margin: new EdgeInsets.all(10.0),
               child: new Stack(
                 children: <Widget>[
-                  getCard(),
+                  new BackerCard(item: this.item),
                   getThumbnail()
                 ],
               ),
