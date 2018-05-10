@@ -42,7 +42,7 @@ class DetailsState extends State<Details>{
           ],
         ),
       ),
-      floatingActionButton: new ActionMenu(),
+      floatingActionButton: new ActionMenu(backer: backer),
     );
   }
 

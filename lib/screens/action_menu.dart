@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:i_love_pao/code/theme.dart';
+import 'package:i_love_pao/screens/actions.dart';
+import 'package:i_love_pao/model/backer.dart';
+import 'package:i_love_pao/model/action_button.dart';
 
 class ActionMenu extends StatefulWidget {
+  ActionMenu({this.backer});
+
+  final Backer backer;
 
 @override
   State<StatefulWidget> createState() {
-    return new ActionMenuWidget();
+    return new ActionMenuWidget(backer: backer);
   }
 
 }
 
 class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
+  ActionMenuWidget({this.backer});
+
+  final Backer backer;
 
   AnimationController _controller;
 
-  static const Map<String, IconData> icons = const  {'Receitas': Icons.card_giftcard, 'Cardápio' : Icons.menu, 'Promoções': Icons.free_breakfast, 'Pão Quentinho' : Icons.whatshot} ;
+  static List<ActionButton> icons =  [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe())] ;
 
   @override
   void initState() {
@@ -23,6 +32,7 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    super.initState();
   }
 
   @override
@@ -48,14 +58,30 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
                 ),
               ),
               child: new  Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  new Chip(label: new Text(icons.keys.elementAt(index)), backgroundColor: backgroundColor,),
+                  new Chip(label: new Text(icons.elementAt(index).label), backgroundColor: backgroundColor,),
                   new FloatingActionButton(
-                    heroTag: ''+icons.keys.elementAt(index),
+                    heroTag: ''+icons.elementAt(index).label,
                     backgroundColor: backgroundColor,
                     mini: true,
-                    child: new Icon(icons.values.elementAt(index), color: foregroundColor),
-                    onPressed: () {},
+                    child:  new Hero(
+                      tag: 'image-hero'+icons.elementAt(index).label,
+                      child:   new Icon(icons.elementAt(index).icon, color: foregroundColor),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, new ActionDialog(
+                          action: icons.elementAt(index),
+                          builder: (BuildContext context)
+                          {
+                            return new Container(
+
+                            );
+                          }
+                      )
+                      );
+                    },
                   )
                 ],
               ),
@@ -70,9 +96,9 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
               animation: _controller,
               builder: (BuildContext context, Widget child) {
                 return new Transform(
-                  transform: new Matrix4.rotationZ(_controller.value * 0.5 * math.PI),
+                  transform: new Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
                   alignment: FractionalOffset.center,
-                  child: new Icon(_controller.isDismissed ? Icons.share : Icons.close),
+                  child: new Icon(_controller.isDismissed ? Icons.add : Icons.close),
                 );
               },
             ),
@@ -87,4 +113,20 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
         ),
       );
   }
+}
+
+List<Widget> buildReceipe() {
+  return new List();
+}
+
+List<Widget> buildPromo() {
+  return new List();
+}
+
+List<Widget> buildMenu() {
+  return new List();
+}
+
+List<Widget> buildHotBread() {
+  return new List();
 }
