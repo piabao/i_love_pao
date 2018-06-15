@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 class login extends StatefulWidget{
   @override
@@ -8,15 +13,77 @@ class login extends StatefulWidget{
   }
 }
 
-void _entrar(context){
-  Navigator.of(context).pushNamed('/backers');
-}
-
-void _cancelar(context){
-  Navigator.pop(context);
-}
-
 class loginState extends State<login>{
+
+  final userController = new TextEditingController();
+  final passController = new TextEditingController();
+
+  String _currentLogin = "";
+  bool apiCall = false; // New variable
+
+  Future<Post> fetchPost(String auth) async {
+    final response = await http.get(
+      'https://i-love-pao.herokuapp.com/user',
+      headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + auth},
+    );
+    final responseJson = json.decode(response.body);
+    //debugPrint('cai aqui '+ responseJson);
+    return new Post.fromJson(responseJson);
+  }
+
+  void _entrar(context){
+
+    var str = userController.text + ":" + passController.text;
+    var bytes = utf8.encode(str);
+    var encoded = base64.encode(bytes);
+    new FutureBuilder<Post>(
+      future: fetchPost(encoded),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          debugPrint('cai aqui2 '+ snapshot.data.title);
+          Navigator.of(context).pushNamed('/backers');
+          return new Text(snapshot.data.title);
+        } else if (snapshot.hasError) {
+          debugPrint('cai aqui3 '+ snapshot.error);
+          return new Text("${snapshot.error}");
+        }
+        // By default, show a loading spinner
+        return new CircularProgressIndicator();
+      },
+    );
+
+  }
+
+  void _cancelar(context){
+    Navigator.pop(context);
+  }
+
+  Widget getProperWidget(){
+    if(apiCall)
+      return new CircularProgressIndicator();
+    else
+      return new Text(
+        '$_currentLogin',
+        style: Theme.of(context).textTheme.display1,
+      );
+  }
+
+  void _callLoginApi() {
+    var str = userController.text + ":" + passController.text;
+    var bytes = utf8.encode(str);
+    var encoded = base64.encode(bytes);
+    fetchPost(encoded).then((login) {
+      setState(() {
+        apiCall= false; //Disable Progressbar
+        _currentLogin = 'Entrando como'+login.name;
+      });
+    }, onError: (error) {
+      setState(() {
+        apiCall=false; //Disable Progressbar
+        _currentLogin = error.toString();
+      });
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -38,6 +105,7 @@ class loginState extends State<login>{
                   new Container(
                     padding: new EdgeInsets.all(10.0),
                     child: new TextField(
+                      controller: userController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: new InputDecoration(
                         labelText: 'Email',
@@ -50,6 +118,7 @@ class loginState extends State<login>{
                   new Container(
                     padding: new EdgeInsets.all(10.0),
                     child: new TextField(
+                      controller: passController,
                       obscureText: true,
                       decoration: new InputDecoration(
                           labelText: 'Senha',
@@ -64,13 +133,24 @@ class loginState extends State<login>{
                     children: <Widget>[
                       new Container(
                           padding: new EdgeInsets.all(5.0),
-                          child: new RaisedButton(child: new Text('Entrar'),onPressed: (){_entrar(context);}),
+                          child: new RaisedButton(child: new Text('Entrar'),
+                              onPressed: (){
+                                setState((){
+                                  apiCall=true; // Set state like this
+                                });
+                                _callLoginApi();
+                          }),
                       ),
                       new Container(
                           padding: new EdgeInsets.all(5.0),
                           child: new RaisedButton(child: new Text('Cancelar'),onPressed: (){_cancelar(context);})
                       ),
                     ],
+                  ),
+
+                  new Container(
+                    padding: new EdgeInsets.all(10.0),
+                    child: getProperWidget(),
                   )
                 ],
               ),
@@ -84,5 +164,25 @@ class loginState extends State<login>{
           ),
         ),
       );
+  }
+}
+
+class Post {
+  final int userId;
+  final int id;
+  final String name;
+  final String title;
+  final String body;
+
+  Post({this.userId, this.id, this.title, this.body, this.name});
+
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return new Post(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+      name: json['name'],
+    );
   }
 }
