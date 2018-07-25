@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class ActionButton {
 
-  ActionButton(String label, IconData icon, List<Widget> widgets){
+  ActionButton(String label, IconData icon, Widget widget){
      this._icon = icon;
      this._label = label;
-     this._widgets = widgets;
+     this._widget = widget;
   }
 
   String _label;
   IconData _icon;
-  List<Widget> _widgets;
+  Widget _widget;
 
   String get label => _label;
 
@@ -24,10 +24,10 @@ class ActionButton {
     _icon = value;
   }
 
-  List<Widget> get widgets => _widgets;
+  Widget get widget => _widget;
 
-  set widgets(List<Widget> value) {
-    _widgets = value;
+  set widget(Widget value) {
+    _widget = value;
   }
 
 }

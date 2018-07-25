@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "949288903771",
+    "firebase_url": "https://eu-amo-pao.firebaseio.com",
+    "project_id": "eu-amo-pao",
+    "storage_bucket": "eu-amo-pao.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949288903771:android:ade288db417cf2d0",
+        "android_client_info": {
+          "package_name": "com.mh.ilovepao"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949288903771-ksgoi7e96c9lh7qvp0kqlpl59qi0d5cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS3GVkvUWYVPfKHq9Z1E9vfCg9hekGohI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

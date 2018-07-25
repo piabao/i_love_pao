@@ -6,6 +6,8 @@ import 'package:i_love_pao/screens/util/card.dart';
 
 import 'package:i_love_pao/database/backerListMock.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 class backerList extends StatelessWidget{
   final GlobalKey<AnimatedListState> _listKey = new GlobalKey<
@@ -94,12 +96,75 @@ class BackerItem extends StatefulWidget {
   }
 }
 
-
 class StateItem extends State<BackerItem>{
   StateItem({Key key, this.onTap, @required this.item});
 
   final VoidCallback onTap;
   final Backer item;
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
+  Widget _buildDialog(BuildContext context,  String name, String message) {
+    return new AlertDialog(
+      title: new Text(name, style: new TextStyle(fontWeight: FontWeight.bold)),
+      content: new Text(message),
+      actions: <Widget>[
+        new FlatButton(
+          child: const Text('Fechar'),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showItemDialog(Map<String, dynamic> message) {
+    //TODO verificar se a padaria esta habilitada a receber notificações (marcada como favorita?) message[id]
+
+    showDialog<bool>(
+      context: context,
+      builder: (_) => _buildDialog(context, message['name'], message['description']),
+    ).then((bool shouldNavigate) {
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.subscribeToTopic("ILovePaoMarlonH");
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print("onMessage: $message");
+        _showItemDialog(message);
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print("onLaunch: $message");
+        _showItemDialog(message);
+      },
+      onResume: (Map<String, dynamic> message) {
+        print("onResume: $message");
+        _showItemDialog(message);
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      setState(() {
+        print("token: $token");
+         //_homeScreenText = "Push Messaging token: $token";
+      });
+        print("token 2");
+       //print(_homeScreenText);
+    });
+  }
+
+
+
 
   Widget getThumbnail(){
     return new Container(

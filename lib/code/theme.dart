@@ -8,5 +8,5 @@ class CurrentTheme {
 
   static const Color botaoAcao = const Color(0xFF648CC4);
 
-  static const Color cardBackground = const Color(0xCCFFFFFF);
+  static const Color cardBackground = const Color(0xCCf1fba6);
 }

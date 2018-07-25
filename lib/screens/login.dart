@@ -31,29 +31,6 @@ class loginState extends State<login>{
     return new Post.fromJson(responseJson);
   }
 
-  void _entrar(context){
-
-    var str = userController.text + ":" + passController.text;
-    var bytes = utf8.encode(str);
-    var encoded = base64.encode(bytes);
-    new FutureBuilder<Post>(
-      future: fetchPost(encoded),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          debugPrint('cai aqui2 '+ snapshot.data.title);
-          Navigator.of(context).pushNamed('/backers');
-          return new Text(snapshot.data.title);
-        } else if (snapshot.hasError) {
-          debugPrint('cai aqui3 '+ snapshot.error);
-          return new Text("${snapshot.error}");
-        }
-        // By default, show a loading spinner
-        return new CircularProgressIndicator();
-      },
-    );
-
-  }
-
   void _cancelar(context){
     Navigator.pop(context);
   }
@@ -75,12 +52,17 @@ class loginState extends State<login>{
     fetchPost(encoded).then((login) {
       setState(() {
         apiCall= false; //Disable Progressbar
-        _currentLogin = 'Entrando como'+login.name;
+        if(login.name == null || login.name.isEmpty){
+          _currentLogin = 'Email ou senha invalidos!';
+          return;
+        }
+        _currentLogin = 'Entrando como '+login.name +' ...';
+        Navigator.of(context).pushNamed('/backers');
       });
     }, onError: (error) {
       setState(() {
         apiCall=false; //Disable Progressbar
-        _currentLogin = error.toString();
+        _currentLogin = 'Email ou senha invalidos!';
       });
     });
   }
@@ -149,7 +131,7 @@ class loginState extends State<login>{
                   ),
 
                   new Container(
-                    padding: new EdgeInsets.all(10.0),
+                    padding: new EdgeInsets.all(15.0),
                     child: getProperWidget(),
                   )
                 ],

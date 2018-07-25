@@ -115,18 +115,43 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
   }
 }
 
-List<Widget> buildReceipe() {
-  return new List();
+Widget buildReceipe() {
+  return Container(
+    
+  );
 }
 
-List<Widget> buildPromo() {
-  return new List();
+Widget buildPromo() {
+  return Container(
+
+  );
 }
 
-List<Widget> buildMenu() {
-  return new List();
+Widget buildMenu() {
+  return Container(
+
+  );
 }
 
-List<Widget> buildHotBread() {
-  return new List();
+Widget buildHotBread() {
+  return new Scaffold(
+//    body: new Container(
+//      padding: new EdgeInsets.only(top: 32.0),
+      body: new Column(
+        children: <Widget>[
+          new Text('Próxima formada sai em: '),
+          new Container(
+            child: new Card(
+              color: CurrentTheme.cardBackground,              
+              margin: new EdgeInsets.only(top: 30.0),
+              child: new Container(
+                padding: new EdgeInsets.all(15.0),
+                child: new Text('Pão Doce: 20/04/2018 18:30'),
+              )
+            ),
+          ),
+        ],
+//      ),
+    ),
+  );
 }

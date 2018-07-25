@@ -60,9 +60,7 @@ class ActionDialog<T> extends PageRoute<T> {
           )
         ),
 
-        content: new ListView.builder(
-            itemBuilder: (BuildContext context, int index) => action.widgets.elementAt(index),
-            itemCount: action.widgets.length),//builder(context),
+        content: action.widget,//builder(context),
         actions: <Widget>[
           new FlatButton(
             child: new Text('OK'),
