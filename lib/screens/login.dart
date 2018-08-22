@@ -4,7 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
+import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:http/http.dart' as http;
+import 'package:i_love_pao/model/user.dart';
 
 class login extends StatefulWidget{
   @override
@@ -14,6 +16,7 @@ class login extends StatefulWidget{
 }
 
 class loginState extends State<login>{
+  RestDatasource api = new RestDatasource();
 
   final userController = new TextEditingController();
   final passController = new TextEditingController();
@@ -46,25 +49,42 @@ class loginState extends State<login>{
   }
 
   void _callLoginApi() {
-    var str = userController.text + ":" + passController.text;
-    var bytes = utf8.encode(str);
-    var encoded = base64.encode(bytes);
-    fetchPost(encoded).then((login) {
+    api.login(userController.text, passController.text).then((User user) {
       setState(() {
         apiCall= false; //Disable Progressbar
-        if(login.name == null || login.name.isEmpty){
+        if(user.username == null || user.username.isEmpty){
           _currentLogin = 'Email ou senha invalidos!';
           return;
         }
-        _currentLogin = 'Entrando como '+login.name +' ...';
+        _currentLogin = 'Entrando como '+user.username +' ...';
         Navigator.of(context).pushNamed('/backers');
       });
-    }, onError: (error) {
+    }).catchError((Exception error) {
       setState(() {
         apiCall=false; //Disable Progressbar
         _currentLogin = 'Email ou senha invalidos!';
       });
     });
+
+//    var str = userController.text + ":" + passController.text;
+//    var bytes = utf8.encode(str);
+//    var encoded = base64.encode(bytes);
+//    fetchPost(encoded).then((login) {
+//      setState(() {
+//        apiCall= false; //Disable Progressbar
+//        if(login.name == null || login.name.isEmpty){
+//          _currentLogin = 'Email ou senha invalidos!';
+//          return;
+//        }
+//        _currentLogin = 'Entrando como '+login.name +' ...';
+//        Navigator.of(context).pushNamed('/backers');
+//      });
+//    }, onError: (error) {
+//      setState(() {
+//        apiCall=false; //Disable Progressbar
+//        _currentLogin = 'Email ou senha invalidos!';
+//      });
+//    });
   }
   
   @override

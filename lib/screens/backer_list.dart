@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/screens/backer_detail.dart';
 import 'package:i_love_pao/screens/util/card.dart';
@@ -9,10 +10,28 @@ import 'package:i_love_pao/database/backerListMock.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 
-class backerList extends StatelessWidget{
+class backerList extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new backerListState();
+  }
+}
+
+class backerListState extends State<backerList> {
   final GlobalKey<AnimatedListState> _listKey = new GlobalKey<
       AnimatedListState>();
-  List<Backer> _list = new backerListMock().getList();
+  RestDatasource api = new RestDatasource();
+  List<Backer> _list = null;
+  void getList(){
+    api.getBackerList().then((List<Backer> list) {
+      setState(() {
+          _list = list;
+        });
+    }).catchError((Exception error) {
+
+    });
+  }
+  //new backerListMock().getList();
 
   // Used to build list items that haven't been removed.
   Widget buildItem(BuildContext context, int index) {
@@ -31,6 +50,7 @@ class backerList extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    getList();
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Minhas Padarias'),
