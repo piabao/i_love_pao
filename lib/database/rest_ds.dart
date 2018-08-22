@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:i_love_pao/database/local/database_helper.dart';
 import 'package:i_love_pao/database/network_util.dart';
@@ -14,11 +16,14 @@ class RestDatasource {
   static final BACKER_LIST = "https://i-love-pao.herokuapp.com/bakery/getBackeryList";
 
   Future<User> login(String username, String password) {
+    var str = username + ":" + password;
+    var bytes = utf8.encode(str);
+    var auth = base64.encode(bytes);
     return _netUtil.get(LOGIN_URL, headers: {
-      "username": username,
-      "password": password
+        HttpHeaders.AUTHORIZATION: 'Basic ' + auth
     }).then((dynamic res) {
       _logged = new User.map(res["user"]);
+      _logged.password = password;
       var db = new DatabaseHelper();
       db.saveUser(_logged);
       print(res.toString());
