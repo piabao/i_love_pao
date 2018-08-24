@@ -24,16 +24,6 @@ class loginState extends State<login>{
   String _currentLogin = "";
   bool apiCall = false; // New variable
 
-  Future<Post> fetchPost(String auth) async {
-    final response = await http.get(
-      'https://i-love-pao.herokuapp.com/user',
-      headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + auth},
-    );
-    final responseJson = json.decode(response.body);
-    //debugPrint('cai aqui '+ responseJson);
-    return new Post.fromJson(responseJson);
-  }
-
   void _cancelar(context){
     Navigator.pop(context);
   }
@@ -49,7 +39,7 @@ class loginState extends State<login>{
   }
 
   void _callLoginApi() {
-    api.login(userController.text, passController.text).then((User user) {
+    api.login(userController.text, passController.text).then((user) {
       setState(() {
         apiCall= false; //Disable Progressbar
         if(user.username == null || user.username.isEmpty){
@@ -69,7 +59,7 @@ class loginState extends State<login>{
 //    var str = userController.text + ":" + passController.text;
 //    var bytes = utf8.encode(str);
 //    var encoded = base64.encode(bytes);
-//    fetchPost(encoded).then((login) {
+//    get(encoded).then((login) {
 //      setState(() {
 //        apiCall= false; //Disable Progressbar
 //        if(login.name == null || login.name.isEmpty){
@@ -138,7 +128,7 @@ class loginState extends State<login>{
                           child: new RaisedButton(child: new Text('Entrar'),
                               onPressed: (){
                                 setState((){
-                                  apiCall=true; // Set state like this
+                                  //apiCall=true; // Set state like this
                                 });
                                 _callLoginApi();
                           }),
@@ -166,25 +156,5 @@ class loginState extends State<login>{
           ),
         ),
       );
-  }
-}
-
-class Post {
-  final int userId;
-  final int id;
-  final String name;
-  final String title;
-  final String body;
-
-  Post({this.userId, this.id, this.title, this.body, this.name});
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return new Post(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
-      name: json['name'],
-    );
   }
 }

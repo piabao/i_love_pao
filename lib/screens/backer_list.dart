@@ -21,7 +21,7 @@ class backerListState extends State<backerList> {
   final GlobalKey<AnimatedListState> _listKey = new GlobalKey<
       AnimatedListState>();
   RestDatasource api = new RestDatasource();
-  List<Backer> _list = null;
+  List<Backer> _list = new List<Backer>();
   void getList(){
     api.getBackerList().then((List<Backer> list) {
       setState(() {
