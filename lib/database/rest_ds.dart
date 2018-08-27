@@ -27,8 +27,8 @@ class RestDatasource {
     });
   }
 
-  Future<List<Backer>> getBackerList() {
-    return _netUtil.get(BACKER_LIST).then((dynamic res) {
+  Future<List<Backer>> getBackerList() async {
+    return _netUtil.post(BACKER_LIST).then((dynamic res) {
 
       print(res.toString());
       if(res["error"]) throw new Exception(res["error_msg"]);

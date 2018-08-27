@@ -5,6 +5,12 @@ import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/screens/backer_detail.dart';
 import 'package:i_love_pao/screens/util/card.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
+import 'dart:convert';
+
+import 'package:http/http.dart';
+
 import 'package:i_love_pao/database/backerListMock.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,19 +23,44 @@ class backerList extends StatefulWidget {
   }
 }
 
+
+
 class backerListState extends State<backerList> {
   final GlobalKey<AnimatedListState> _listKey = new GlobalKey<
       AnimatedListState>();
   RestDatasource api = new RestDatasource();
   List<Backer> _list = new List<Backer>();
-  void getList(){
-    api.getBackerList().then((List<Backer> list) {
-      setState(() {
-          _list = list;
-        });
-    }).catchError((Exception error) {
 
+
+  teste() async {
+    String username = 'teste';
+    String password = '123';
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    print(basicAuth);
+
+    Response r = await get('https://i-love-pao.herokuapp.com/bakery/getBackeryList',
+        headers: {'authorization': basicAuth});
+    print(r.statusCode);
+    print(r.body);
+    final parsed = json.decode(r.body).cast<Map<String, dynamic>>();
+
+    setState(() {
+      _list = parsed.map<Backer>((json) => Backer.fromJson(json)).toList();
     });
+    var responseJson = json.decode(r.body);
+  }
+
+
+  void getList(){
+    teste();
+//    api.getBackerList().then((List<Backer> list) {
+//      setState(() {
+//          _list = list;
+//        });
+//    }).catchError((Exception error) {
+//      print(error);
+//    });
   }
   //new backerListMock().getList();
 
@@ -45,7 +76,7 @@ class backerListState extends State<backerList> {
   }
 
   void onFilter(){
-
+    getList();
   }
 
   @override
@@ -197,7 +228,8 @@ class StateItem extends State<BackerItem>{
         ),
       ),
       child: new CircleAvatar(
-        backgroundImage: new AssetImage(item.icon),
+        backgroundImage: new CachedNetworkImageProvider(item.logo
+        ),//new AssetImage(item.logo),
       ),
       height: 80.0,
       width: 80.0,

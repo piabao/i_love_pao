@@ -6,6 +6,8 @@ import 'package:i_love_pao/screens/util/text_style.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/screens/action_menu.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 class Details extends StatefulWidget{
   Details({this.backer});
   final Backer backer;
@@ -49,7 +51,10 @@ class DetailsState extends State<Details>{
   Container _getBackground () {
     return new Container(
       child: new ClipPath(
-        child: new Image.asset(backer.detailImage),
+        child: CachedNetworkImage(
+          placeholder: CircularProgressIndicator(),
+          imageUrl: backer.cardImage,
+        ),
         clipper: new BottomWaveClipper(),
       )
     );
@@ -76,7 +81,11 @@ class DetailsState extends State<Details>{
                 ),
                 new Container(
                   margin: new EdgeInsets.only(left: 110.0, top: 0.0),
-                  child: new Image.asset(backer.icon, width: 100.0,),
+                  child: CachedNetworkImage(
+                    placeholder: CircularProgressIndicator(),
+                    width: 100.0,
+                    imageUrl: backer.logo,
+                  ),//new Image.asset(backer.logo, width: 100.0,),
                   height: 100.0,
                   width: 100.0,
                 ),
@@ -94,7 +103,7 @@ class DetailsState extends State<Details>{
                     width: 18.0,
                     color: new Color(0xFF00c6ff),
                   ),
-                  new Text(backer.overview, style: Style.baseTextStyle)
+                  new Text(backer.description, style: Style.baseTextStyle)
                 ],
               ),
             ),

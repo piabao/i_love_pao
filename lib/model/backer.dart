@@ -1,42 +1,82 @@
 import 'package:i_love_pao/model/address.dart';
 
 class Backer{
+
+  int _id;
   String _name;
-  String _icon;
-  Address _address;
+  String _description;
+  String _logo;
+  String _cardImage;
+  String _site;
+  String _email;
+  List<Address> _address;
   bool _favorite = false;
-  String _detailImage;
-  String _overview;
 
-  Backer(String name, String icon, String detailImage, Address add){
-    this._detailImage = detailImage;
-    this._address = add;
+
+  Backer(String name, String logo, String cardImg, Address addr){
     this._name = name;
-    this._icon = icon;
+    this._logo = logo;
+    this._cardImage = cardImg;
+    this._address = [addr];
   }
 
-  String get overview => _overview;
-
-  set overview(String value) {
-    _overview = value;
+  Backer.fromJson(Map<String, dynamic> obj) {
+    this._id = obj["id"];
+    this._name = obj["name"];
+    this._description = obj["description"];
+    this._logo = obj["logo"];
+    this._cardImage = obj["cardImage"];
+    this._site = obj["site"];
+    this._email = obj["email"];
+    if(obj["addresses"] != null){
+      var list = obj["addresses"].map<Address>((json) => Address.fromJson(json)).toList();
+      this._address = list;
+    }else{
+      this._address = [new Address()];
+    }
   }
 
-  String get detailImage => _detailImage;
+  bool get favorite => _favorite;
 
-  set detailImage(String value) {
-    _detailImage = value;
+  set favorite(bool value) {
+    _favorite = value;
   }
 
-  Address get address => _address;
 
-  set address(Address value) {
+  List<Address> get address => _address;
+
+  set address(List<Address> value) {
     _address = value;
   }
 
-  String get icon => _icon;
+  String get email => _email;
 
-  set icon(String value) {
-    _icon = value;
+  set email(String value) {
+    _email = value;
+  }
+
+  String get site => _site;
+
+  set site(String value) {
+    _site = value;
+  }
+
+  String get cardImage => _cardImage;
+
+  set cardImage(String value) {
+    _cardImage = value;
+  }
+
+  String get logo => _logo;
+
+  set logo(String value) {
+    _logo = value;
+  }
+
+  String get description => _description;
+
+  set description(String value) {
+    _description = value;
   }
 
   String get name => _name;
@@ -45,10 +85,11 @@ class Backer{
     _name = value;
   }
 
-  bool get favorite => _favorite;
+  int get id => _id;
 
-  set favorite(bool value) {
-    _favorite = value;
+  set id(int value) {
+    _id = value;
   }
+
 
 }

@@ -1,20 +1,40 @@
 class Address {
-  String _streetName;
-  int _number;
-  String _district;
+  int _id;
+  String _street;
+  String _number;
+  String _neighborhood;
+  String _complement;
   String _city;
   String _state;
-  int _zip;
+  int _cep;
+  String _phone;
+  String _email;
   String _lon;
   String _lat;
 
-  String get streetName => _streetName;
+  Address(){}
 
-  set streetName(String value) {
-    _streetName = value;
+  Address.fromJson(Map<String, dynamic> obj) {
+    this._id = obj["id"];
+    this._street = obj["street"];
+    this._number = obj["number"];
+    this._neighborhood = obj["neighborhood"];
+    this._complement = obj["complement"];
+    this._city = obj["city"];
+    this._state = obj["state"];
+    this._cep = obj["cep"];
+    this._phone = obj["phone"];
+    this._email = obj["email"];
+    this._lon = obj["lon"];
+    this._lat = obj["lat"];
+  }
+  int get id => _id;
+
+  set id(int value) {
+    _id = value;
   }
 
-  int get number => _number;
+  String get street => _street;
 
   String get lat => _lat;
 
@@ -28,10 +48,22 @@ class Address {
     _lon = value;
   }
 
-  int get zip => _zip;
+  String get email => _email;
 
-  set zip(int value) {
-    _zip = value;
+  set email(String value) {
+    _email = value;
+  }
+
+  String get phone => _phone;
+
+  set phone(String value) {
+    _phone = value;
+  }
+
+  int get cep => _cep;
+
+  set cep(int value) {
+    _cep = value;
   }
 
   String get state => _state;
@@ -46,14 +78,26 @@ class Address {
     _city = value;
   }
 
-  String get district => _district;
+  String get complement => _complement;
 
-  set district(String value) {
-    _district = value;
+  set complement(String value) {
+    _complement = value;
   }
 
-  set number(int value) {
+  String get neighborhood => _neighborhood;
+
+  set neighborhood(String value) {
+    _neighborhood = value;
+  }
+
+  String get number => _number;
+
+  set number(String value) {
     _number = value;
+  }
+
+  set street(String value) {
+    _street = value;
   }
 
 

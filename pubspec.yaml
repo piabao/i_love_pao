@@ -10,6 +10,7 @@ dependencies:
   cupertino_icons: ^0.1.0
   firebase_messaging: ^1.0.4
   sqflite: any
+  cached_network_image: "^0.4.1"
 
 dev_dependencies:
   flutter_test:

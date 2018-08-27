@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i_love_pao/model/address.dart';
 import 'package:i_love_pao/model/backer.dart';
 
 class BackerCard extends StatefulWidget{
@@ -24,6 +25,9 @@ class CardState extends State<BackerCard> {
 
   @override
   Widget build(BuildContext context) {
+
+    Address adds = item.address == null || item.address.length == 0 ? null :  item.address[0];
+
     return new Container(
       height: 124.0,
       margin: new EdgeInsets.only(left: 46.0),
@@ -51,7 +55,7 @@ class CardState extends State<BackerCard> {
         ),
         title: new Text(item.name, style: new TextStyle(
             color: Colors.white, fontWeight: FontWeight.w600),),
-        subtitle: new Text(item.address.city + ', ' + item.address.district,
+        subtitle: new Text(adds == null ? '' : adds.city + ', ' + adds.neighborhood,
             style: new TextStyle(color: new Color(0xFF330808))),
       ),
     );
