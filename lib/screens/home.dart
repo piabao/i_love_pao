@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/screens/login.dart';
+import 'package:i_love_pao/screens/register.dart';
 
 class home extends StatelessWidget {
 
   String _title = 'Seja Bem Vindo';
 
-  static void _onPressed(){
-
-  }
-
-  var comecarPane = new Container(
+  Container comecarPane(BuildContext context){
+  return new Container(
     child: new Column(
       children: <Widget>[
         new RaisedButton(
             padding : new EdgeInsets.all(30.0),
             color : CurrentTheme.botaoAcao,
             child: new Text('Começar'),
-            onPressed: (){_onPressed();}
+            onPressed: (){showLoginDialog(context: context);}
             ),
       ],
     ),
     margin: const EdgeInsets.all(10.0),
     padding: const EdgeInsets.all(10.0),
-  );
 
-  void showDemoDialog({ BuildContext context }) {
+  );
+  }
+
+  void showLoginDialog({ BuildContext context }) {
     showDialog(context: context, child:
       new SimpleDialog(
         children: <Widget>[
@@ -34,9 +34,16 @@ class home extends StatelessWidget {
       )
     );
   }
-  var loginPane = new Container(
 
-  );
+  void showRegisterDialog({ BuildContext context }) {
+    showDialog(context: context, child:
+    new SimpleDialog(
+      children: <Widget>[
+        new register()
+      ],
+    )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +58,10 @@ class home extends StatelessWidget {
                   fontFamily: "Lobster",
               ),),
               new Image.asset('images/icone1.png', scale: 3.0,),
-              comecarPane,
+              comecarPane(context),
               new RaisedButton(
-                  child: new Text('Entrar'),
-                  onPressed: (){showDemoDialog(context: context);})
+                  child: new Text('Registrar'),
+                  onPressed: (){showRegisterDialog(context: context);})
             ],
           ),
         constraints: new BoxConstraints.expand(),

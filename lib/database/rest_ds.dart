@@ -12,7 +12,7 @@ class RestDatasource {
   DatabaseHelper db = new DatabaseHelper();
 
   static final LOGIN_URL = 'https://i-love-pao.herokuapp.com/user';
-
+  static final REGISTER_URL = 'https://i-love-pao.herokuapp.com/register';
   static final BACKER_LIST = 'https://i-love-pao.herokuapp.com/bakery/getBackeryList';
 
   Future<User> login(String username, String password) async {
@@ -33,6 +33,18 @@ class RestDatasource {
       print(res.toString());
       if(res["error"]) throw new Exception(res["error_msg"]);
       return res;
+    });
+  }
+
+  Future<User> register(String username, String password) async {
+    //_netUtil.setAuthorization(username, password);
+    return _netUtil.geWoutAuth(REGISTER_URL+'/'+username+'/'+password).then((dynamic res) {
+
+      var user = new User.map(res);
+//      var db = new DatabaseHelper();
+//      db.saveUser(user);
+      //if(res["error"]) throw new Exception(res["error_msg"]);
+      return user;
     });
   }
 }

@@ -42,11 +42,11 @@ class NetworkUtil {
   }
 
   Future<dynamic> post(String url, {body, encoding}) {
-    var str = _logged.username + ":" + _logged.password;
-    var bytes = utf8.encode(str);
-    var auth = base64.encode(bytes);
+//    var str = _logged.username + ":" + _logged.password;
+//    var bytes = utf8.encode(str);
+//    var auth = base64.encode(bytes);
     return http
-        .post(url, body: body, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + auth}, encoding: encoding)
+        .post(url, body: body, headers: {}, encoding: encoding)
         .then((http.Response response) {
       final String res = response.body;
       final int statusCode = response.statusCode;
@@ -56,6 +56,18 @@ class NetworkUtil {
       }
       return _decoder.convert(res);
     });
+  }
+
+  Future<dynamic> geWoutAuth(String url) async {
+    var response = await http.get(url);
+    var responseJson = json.decode(response.body);
+    int statusCode = response.statusCode;
+    print("_<><><><>< "+ statusCode.toString());
+    if (statusCode < 200 || statusCode > 400 || json == null) {
+      throw new Exception(">>>>>Erro ao buscar informações");
+    }
+
+    return responseJson;
   }
 
 }
