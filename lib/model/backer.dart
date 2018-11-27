@@ -1,4 +1,5 @@
 import 'package:i_love_pao/model/address.dart';
+import 'package:i_love_pao/model/bakery_artifacts.dart';
 
 class Backer{
 
@@ -11,6 +12,8 @@ class Backer{
   String _email;
   List<Address> _address;
   bool _favorite = false;
+  double _averageRating = 0.0;
+  BakeryArtifacts _artifacts;
 
 
   Backer(String name, String logo, String cardImg, Address addr){
@@ -28,12 +31,19 @@ class Backer{
     this._cardImage = obj["cardImage"];
     this._site = obj["site"];
     this._email = obj["email"];
+    //this._averageRating = obj["averageRating"];
     if(obj["addresses"] != null){
       var list = obj["addresses"].map<Address>((json) => Address.fromJson(json)).toList();
       this._address = list;
     }else{
       this._address = [new Address()];
     }
+  }
+
+  double get averageRating => _averageRating;
+
+  set averageRating(double value) {
+    _averageRating = value;
   }
 
   bool get favorite => _favorite;
@@ -90,6 +100,14 @@ class Backer{
   set id(int value) {
     _id = value;
   }
+
+  BakeryArtifacts get artifacts => _artifacts;
+
+  set artifacts(BakeryArtifacts value) {
+    _artifacts = value;
+  }
+
+
 
 
 }

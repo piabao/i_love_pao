@@ -4,6 +4,7 @@ import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/screens/actions.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/action_button.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ActionMenu extends StatefulWidget {
   ActionMenu({this.backer});
@@ -24,7 +25,7 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
 
   AnimationController _controller;
 
-  static List<ActionButton> icons =  [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe())] ;
+  static List<ActionButton> icons =  [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe()), new ActionButton('Avaliar', Icons.stars, buildRating())] ;
 
   @override
   void initState() {
@@ -133,6 +134,32 @@ Widget buildMenu() {
   );
 }
 
+Widget buildRating() {
+  return new Container(
+//    body: new Container(
+//      padding: new EdgeInsets.only(top: 32.0),
+    child: new Column(
+      children: <Widget>[
+        new Center(
+          child: new Text('Qual é sua avaliação deste estabelecimento?'),
+        ),
+        new Container(
+          child:  new StarRating(),
+        ),
+        new FlatButton(
+          child: new Text("Confirmar"),
+          onPressed: () {
+            // TODO: salvar avaliação
+            //Navigator.of(context).pop();
+          },
+        ),
+      ],
+//      ),
+    ),
+  );
+
+}
+
 Widget buildHotBread() {
   return new Scaffold(
 //    body: new Container(
@@ -154,4 +181,34 @@ Widget buildHotBread() {
 //      ),
     ),
   );
+}
+
+class StarRating extends StatefulWidget{
+
+  @override
+  State<StatefulWidget> createState() {
+    return new StarRatingState();
+  }
+}
+
+class StarRatingState extends State<StarRating>{
+  var rating = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Center(
+      child: SmoothStarRating(
+        allowHalfRating: true,
+        rating: rating,
+        size: 45.0,
+        starCount: 5,
+        onRatingChanged: (value) {
+          setState(() {
+            rating = value;
+          });
+        },
+      ),
+    );
+  }
+
 }

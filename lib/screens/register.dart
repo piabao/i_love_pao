@@ -61,12 +61,6 @@ class registerState extends State<register> {
     }
     api.register(userController.text, passController.text).then((user) {
       setState(() {
-        apiCall = false; //Disable Progressbar
-//        if (user.username == null || user.username.isEmpty) {
-//          _currentLogin = 'Email ou senha invalidos!';
-//          return;
-//        }
-//        _currentLogin = 'Entrando como ' + user.username + ' ...';
         _showDialog("Uma confirmação foi enviada para o seu e-mail, por favor acesse o link enviado no seu e-mail para confirmar seu registro!");
         Navigator.of(context).pushNamed('/home');
       });
@@ -76,7 +70,6 @@ class registerState extends State<register> {
         _currentLogin = 'Erro ao registrar esse email!';
       });
     });
-
   }
 
   @override

@@ -32,35 +32,38 @@ class backerListState extends State<backerList> {
   List<Backer> _list = new List<Backer>();
 
 
-  teste() async {
-    String username = 'teste';
-    String password = '123';
-    String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('$username:$password'));
-    print(basicAuth);
-
-    Response r = await get('https://i-love-pao.herokuapp.com/bakery/getBackeryList',
-        headers: {'authorization': basicAuth});
-    print(r.statusCode);
-    print(r.body);
-    final parsed = json.decode(r.body).cast<Map<String, dynamic>>();
-
-    setState(() {
-      _list = parsed.map<Backer>((json) => Backer.fromJson(json)).toList();
-    });
-    var responseJson = json.decode(r.body);
-  }
+//  teste() async {
+//    String username = 'teste';
+//    String password = '123';
+//    String basicAuth =
+//        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+//    print(basicAuth);
+//
+//    Response r = await get('https://i-love-pao.herokuapp.com/bakery/getBackeryList',
+//        headers: {'authorization': basicAuth});
+//    print(r.statusCode);
+//    print(r.body);
+//    final parsed = json.decode(r.body).cast<Map<String, dynamic>>();
+//
+//    setState(() {
+//      _list = parsed.map<Backer>((json) => Backer.fromJson(json)).toList();
+//    });
+//    var responseJson = json.decode(r.body);
+//  }
 
 
   void getList(){
-    teste();
-//    api.getBackerList().then((List<Backer> list) {
-//      setState(() {
-//          _list = list;
-//        });
-//    }).catchError((Exception error) {
-//      print(error);
-//    });
+    //teste();
+    if(!_list.isEmpty ){
+      return;
+    }
+    api.getBackerList().then((List<Backer> list) {
+      setState(() {
+          _list = list;
+        });
+    }).catchError((Exception error) {
+      print(error);
+    });
   }
   //new backerListMock().getList();
 
@@ -213,9 +216,6 @@ class StateItem extends State<BackerItem>{
        //print(_homeScreenText);
     });
   }
-
-
-
 
   Widget getThumbnail(){
     return new Container(

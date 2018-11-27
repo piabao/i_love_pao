@@ -57,7 +57,7 @@ class home extends StatelessWidget {
                   fontSize: 40.0,
                   fontFamily: "Lobster",
               ),),
-              new Image.asset('images/icone1.png', scale: 3.0,),
+              new Image.asset('images/eu_amo_pao_v2.png', scale: 3.0,),
               comecarPane(context),
               new RaisedButton(
                   child: new Text('Registrar'),

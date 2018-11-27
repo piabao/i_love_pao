@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/backer.dart';
+import 'package:i_love_pao/model/bakery_artifacts.dart';
 import 'package:i_love_pao/screens/util/clipper.dart';
 import 'package:i_love_pao/screens/util/card.dart';
 import 'package:i_love_pao/screens/util/text_style.dart';
@@ -20,11 +22,26 @@ class Details extends StatefulWidget{
 
 class DetailsState extends State<Details>{
   DetailsState({this.backer});
-
+  RestDatasource api = new RestDatasource();
+  //BakeryArtifacts _bkArt = new BakeryArtifacts();
   final Backer backer;
+
+  void getArtifacts(){
+    //teste();
+    api.getBackerArtifacts(backer.id).then((BakeryArtifacts bkArt) {
+      setState(() {
+        backer.artifacts = bkArt;
+      });
+    }).catchError((Exception error) {
+      print(error);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    getArtifacts();
+
     return new Scaffold(
       body: new Container(
         constraints: new BoxConstraints.expand(),
@@ -63,7 +80,8 @@ class DetailsState extends State<Details>{
   Container _getToolbar(BuildContext context) {
     return new Container(
       margin: new EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top
+          top: MediaQuery.of(context).padding.top,
+          right: MediaQuery.of(context).padding.right
       ),
       child: new BackButton(color: Colors.white),
     );

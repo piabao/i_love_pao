@@ -33,18 +33,17 @@ class NetworkUtil {
     );
     var responseJson = json.decode(response.body);
     int statusCode = response.statusCode;
-    print("_<><><><>< "+ statusCode.toString());
     if (statusCode < 200 || statusCode > 400 || json == null) {
-      throw new Exception(">>>>>Erro ao buscar informações");
+      throw new Exception("Erro ao buscar informações");
     }
 
     return responseJson;
   }
 
   Future<dynamic> post(String url, {body, encoding}) {
-//    var str = _logged.username + ":" + _logged.password;
-//    var bytes = utf8.encode(str);
-//    var auth = base64.encode(bytes);
+    var str = _logged.username + ":" + _logged.password;
+    var bytes = utf8.encode(str);
+    var auth = base64.encode(bytes);
     return http
         .post(url, body: body, headers: {}, encoding: encoding)
         .then((http.Response response) {
@@ -62,9 +61,8 @@ class NetworkUtil {
     var response = await http.get(url);
     var responseJson = json.decode(response.body);
     int statusCode = response.statusCode;
-    print("_<><><><>< "+ statusCode.toString());
     if (statusCode < 200 || statusCode > 400 || json == null) {
-      throw new Exception(">>>>>Erro ao buscar informações");
+      throw new Exception("Erro ao buscar informações");
     }
 
     return responseJson;

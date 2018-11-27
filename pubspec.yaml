@@ -11,6 +11,7 @@ dependencies:
   firebase_messaging: ^1.0.4
   sqflite: any
   cached_network_image: "^0.4.1"
+  smooth_star_rating: 1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +45,8 @@ flutter:
    - images/fundo_0004.jpg
    - images/fundo_0005.png
    - images/fundo_0006.jpg
+   - images/eu_amo_pao.png
+   - images/eu_amo_pao_v2.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

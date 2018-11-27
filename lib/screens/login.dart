@@ -55,26 +55,6 @@ class loginState extends State<login>{
         _currentLogin = 'Email ou senha invalidos!';
       });
     });
-
-//    var str = userController.text + ":" + passController.text;
-//    var bytes = utf8.encode(str);
-//    var encoded = base64.encode(bytes);
-//    get(encoded).then((login) {
-//      setState(() {
-//        apiCall= false; //Disable Progressbar
-//        if(login.name == null || login.name.isEmpty){
-//          _currentLogin = 'Email ou senha invalidos!';
-//          return;
-//        }
-//        _currentLogin = 'Entrando como '+login.name +' ...';
-//        Navigator.of(context).pushNamed('/backers');
-//      });
-//    }, onError: (error) {
-//      setState(() {
-//        apiCall=false; //Disable Progressbar
-//        _currentLogin = 'Email ou senha invalidos!';
-//      });
-//    });
   }
   
   @override
