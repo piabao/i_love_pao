@@ -41,11 +41,13 @@ class NetworkUtil {
   }
 
   Future<dynamic> post(String url, {body, encoding}) {
-    var str = _logged.username + ":" + _logged.password;
-    var bytes = utf8.encode(str);
-    var auth = base64.encode(bytes);
+    if(_authetication == null){
+      var str = _logged.username + ":" + _logged.password;
+      var bytes = utf8.encode(str);
+      _authetication = base64.encode(bytes);
+    }
     return http
-        .post(url, body: body, headers: {}, encoding: encoding)
+        .post(url, body: body, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication}, encoding: encoding)
         .then((http.Response response) {
       final String res = response.body;
       final int statusCode = response.statusCode;

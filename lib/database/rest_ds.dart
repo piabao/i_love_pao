@@ -16,6 +16,7 @@ class RestDatasource {
   static final REGISTER_URL = 'https://i-love-pao.herokuapp.com/register';
   static final BACKER_LIST = 'https://i-love-pao.herokuapp.com/bakery/getBackeryList';
   static final BACKER_ARTIFACTS = 'https://i-love-pao.herokuapp.com/bakery/getBackeryArtifacts';
+  static final SAVE_BAKERY_RATING = 'https://i-love-pao.herokuapp.com/bakery/saveBakeryRating';
 
   Future<User> login(String username, String password) async {
     _netUtil.setAuthorization(username, password);
@@ -48,6 +49,18 @@ class RestDatasource {
 
       //if(res["error"]) throw new Exception(res["error_msg"]);
       return parsed.map<BakeryArtifacts>((json) => BakeryArtifacts.fromJson(json));
+    });
+  }
+
+  Future<bool> saveBakeryRating(int id, double rating) async {
+    return _netUtil.post( SAVE_BAKERY_RATING, body: json.encoder.convert({"bakery_id": id,"rating": rating})).then((dynamic res) {
+      print(res.toString());
+      final parsed = res.cast<Map<String, dynamic>>();
+      if(parsed != null){
+        return true;
+      }
+      //if(res["error"]) throw new Exception(res["error_msg"]);
+      return false;
     });
   }
 

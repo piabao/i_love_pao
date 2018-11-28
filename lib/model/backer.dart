@@ -23,6 +23,10 @@ class Backer{
     this._address = [addr];
   }
 
+  Backer.fromId(int id){
+    this._id = id;
+  }
+
   Backer.fromJson(Map<String, dynamic> obj) {
     this._id = obj["id"];
     this._name = obj["name"];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:i_love_pao/code/theme.dart';
+import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/screens/actions.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/action_button.dart';
@@ -9,26 +10,25 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 class ActionMenu extends StatefulWidget {
   ActionMenu({this.backer});
 
-  final Backer backer;
+  Backer backer;
 
 @override
   State<StatefulWidget> createState() {
     return new ActionMenuWidget(backer: backer);
   }
-
 }
 
 class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
   ActionMenuWidget({this.backer});
-
-  final Backer backer;
+  Backer backer;
 
   AnimationController _controller;
 
-  static List<ActionButton> icons =  [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe()), new ActionButton('Avaliar', Icons.stars, buildRating())] ;
+  List<ActionButton> icons =  [];
 
   @override
   void initState() {
+    icons = [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe()), new ActionButton('Avaliar', Icons.stars, buildRating(backer.id))] ;
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -118,7 +118,7 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
 
 Widget buildReceipe() {
   return Container(
-    
+
   );
 }
 
@@ -134,32 +134,6 @@ Widget buildMenu() {
   );
 }
 
-Widget buildRating() {
-  return new Container(
-//    body: new Container(
-//      padding: new EdgeInsets.only(top: 32.0),
-    child: new Column(
-      children: <Widget>[
-        new Center(
-          child: new Text('Qual é sua avaliação deste estabelecimento?'),
-        ),
-        new Container(
-          child:  new StarRating(),
-        ),
-        new FlatButton(
-          child: new Text("Confirmar"),
-          onPressed: () {
-            // TODO: salvar avaliação
-            //Navigator.of(context).pop();
-          },
-        ),
-      ],
-//      ),
-    ),
-  );
-
-}
-
 Widget buildHotBread() {
   return new Scaffold(
 //    body: new Container(
@@ -169,7 +143,7 @@ Widget buildHotBread() {
           new Text('Próxima formada sai em: '),
           new Container(
             child: new Card(
-              color: CurrentTheme.cardBackground,              
+              color: CurrentTheme.cardBackground,
               margin: new EdgeInsets.only(top: 30.0),
               child: new Container(
                 padding: new EdgeInsets.all(15.0),
@@ -183,15 +157,54 @@ Widget buildHotBread() {
   );
 }
 
+final key = new GlobalKey();
+
+Widget buildRating(int id) {
+  StarRating _rating = new StarRating();
+  RestDatasource _api = new RestDatasource();
+
+  return new Container(
+    //    body: new Container(
+    //      padding: new EdgeInsets.only(top: 32.0),
+    child: new Column(
+      children: <Widget>[
+        new Center(
+          child: new Text('Qual é sua avaliação deste estabelecimento?'),
+        ),
+        new Container(
+          child:  _rating,
+        ),
+        new FlatButton(
+          child: new Text("Confirmar"),
+          onPressed: () {
+            _api.saveBakeryRating(id, _rating.rating);
+            // TODO: salvar avaliação
+            //Navigator.of(context).pop();
+          },
+        ),
+      ],
+      //      ),
+    ),
+  );
+}
+
 class StarRating extends StatefulWidget{
+  var _rating = 0.0;
 
   @override
   State<StatefulWidget> createState() {
-    return new StarRatingState();
+    return new StarRatingState(rating: _rating);
+  }
+
+  get rating => _rating;
+
+  set rating(value) {
+    _rating = value;
   }
 }
 
 class StarRatingState extends State<StarRating>{
+  StarRatingState({this.rating});
   var rating = 0.0;
 
   @override
@@ -211,4 +224,8 @@ class StarRatingState extends State<StarRating>{
     );
   }
 
+
+
+
 }
+
