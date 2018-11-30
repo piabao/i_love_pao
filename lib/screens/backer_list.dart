@@ -174,10 +174,11 @@ class StateItem extends State<BackerItem>{
 
   void _showItemDialog(Map<String, dynamic> message) {
     //TODO verificar se a padaria esta habilitada a receber notificações (marcada como favorita?) message[id]
-
+    var title = utf8.decode(base64Decode(message['name']));
+    var content = utf8.decode(base64Decode(message['description']));
     showDialog<bool>(
       context: context,
-      builder: (_) => _buildDialog(context, message['name'], message['description']),
+      builder: (_) => _buildDialog(context, title,  content),
     ).then((bool shouldNavigate) {
     });
   }

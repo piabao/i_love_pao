@@ -20,14 +20,14 @@ class RestDatasource {
 
   Future<User> login(String username, String password) async {
     _netUtil.setAuthorization(username, password);
-    return _netUtil.get(LOGIN_URL).then((dynamic res) {
+      return _netUtil.get(LOGIN_URL).then((dynamic res) {
+        //if(res["error"]) throw new Exception(res["error_msg"]);
 
-      var user = new User.map(res);
-//      var db = new DatabaseHelper();
-//      db.saveUser(user);
-      //if(res["error"]) throw new Exception(res["error_msg"]);
-      return user;
-    });
+        var user = new User.map(res);
+  //      var db = new DatabaseHelper();
+  //      db.saveUser(user);
+        return user;
+      });
   }
 
   Future<List<Backer>> getBackerList() async {
@@ -53,10 +53,10 @@ class RestDatasource {
   }
 
   Future<bool> saveBakeryRating(int id, double rating) async {
-    return _netUtil.post( SAVE_BAKERY_RATING, body: json.encoder.convert({"bakery_id": id,"rating": rating})).then((dynamic res) {
+    return _netUtil.post( SAVE_BAKERY_RATING, {"bakery_id": id.toString(),"rating": "$rating"}).then((dynamic res) {
       print(res.toString());
-      final parsed = res.cast<Map<String, dynamic>>();
-      if(parsed != null){
+      //final parsed = res.cast<Map<String, dynamic>>();
+      if(res != null){
         return true;
       }
       //if(res["error"]) throw new Exception(res["error_msg"]);

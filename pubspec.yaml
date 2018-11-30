@@ -12,6 +12,8 @@ dependencies:
   sqflite: any
   cached_network_image: "^0.4.1"
   smooth_star_rating: 1.0.1
+  fluttertoast: ^2.1.1
+  progress_hud: ^1.1.0
 
 dev_dependencies:
   flutter_test:

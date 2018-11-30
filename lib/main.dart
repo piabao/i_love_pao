@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       home: new home(),
       routes: <String, WidgetBuilder>{
         '/home' : (BuildContext context) => new home(),
-        '/login' : (BuildContext context) => new login(),
+        '/login' : (BuildContext context) => new Login(),
         '/backers' : (BuildContext context) => new backerList(),
         //'/details/$item' : (BuildContext context) => new Details(item),
       }

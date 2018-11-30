@@ -1,60 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:crypto/crypto.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
-import 'package:http/http.dart' as http;
-import 'package:i_love_pao/model/user.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
+import 'package:i_love_pao/screens/util/toast.dart';
 
-class login extends StatefulWidget{
+class Login extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    return new loginState();
+    return new LoginState();
   }
 }
 
-class loginState extends State<login>{
+class LoginState extends State<Login>{
   RestDatasource api = new RestDatasource();
 
   final userController = new TextEditingController();
   final passController = new TextEditingController();
 
-  String _currentLogin = "";
-  bool apiCall = false; // New variable
+  var progress = new AsyncProgress().initialize();
 
   void _cancelar(context){
     Navigator.pop(context);
   }
 
-  Widget getProperWidget(){
-    if(apiCall)
-      return new CircularProgressIndicator();
-    else
-      return new Text(
-        '$_currentLogin',
-        style: Theme.of(context).textTheme.display1,
-      );
-  }
-
-  void _callLoginApi() {
-    api.login(userController.text, passController.text).then((user) {
-      setState(() {
-        apiCall= false; //Disable Progressbar
+  void _callLoginApi() async {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    showDialog(
+        context: context,
+        child: progress);
+    try {
+      var user = await api.login(userController.text, passController.text);
         if(user.username == null || user.username.isEmpty){
-          _currentLogin = 'Email ou senha invalidos!';
+          MyToast.error("Email ou senha invalidos!");
+          Navigator.pop(context);
           return;
         }
-        _currentLogin = 'Entrando como '+user.username +' ...';
+        Navigator.pop(context);
+        MyToast.show('Entrando como '+user.username +' ...');
         Navigator.of(context).pushNamed('/backers');
-      });
-    }).catchError((Exception error) {
-      setState(() {
-        apiCall=false; //Disable Progressbar
-        _currentLogin = 'Email ou senha invalidos!';
-      });
-    });
+    } on Exception catch(error) {
+      Navigator.pop(context);
+      MyToast.error("Email ou senha invalidos!");
+    }
   }
   
   @override
@@ -119,11 +106,6 @@ class loginState extends State<login>{
                       ),
                     ],
                   ),
-
-                  new Container(
-                    padding: new EdgeInsets.all(15.0),
-                    child: getProperWidget(),
-                  )
                 ],
               ),
           ),

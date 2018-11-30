@@ -40,23 +40,47 @@ class NetworkUtil {
     return responseJson;
   }
 
-  Future<dynamic> post(String url, {body, encoding}) {
+  Future<dynamic> post(String url, var body) async {
     if(_authetication == null){
       var str = _logged.username + ":" + _logged.password;
       var bytes = utf8.encode(str);
       _authetication = base64.encode(bytes);
     }
-    return http
-        .post(url, body: body, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication}, encoding: encoding)
-        .then((http.Response response) {
-      final String res = response.body;
-      final int statusCode = response.statusCode;
+    var client = new http.Client();
+    //url = Uri.parse(url);
+//    var request = new http.Request('POST', Uri.parse(url));
+//    request.headers[HttpHeaders.AUTHORIZATION] = 'Basic ' + _authetication;
+//    request.bodyFields = body;
 
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        throw new Exception("Erro ao buscar informações");
-      }
-      return _decoder.convert(res);
-    });
+    var response = await client.post(url, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication});
+
+    var responseJson = json.decode(response.body);
+    int statusCode = response.statusCode;
+    if (statusCode < 200 || statusCode > 400 || json == null) {
+      throw new Exception("Erro ao buscar informações");
+    }
+
+    return responseJson;
+//    var response = client.send(request).then((response) {
+//      response.stream.drain(); }).catchError((error) => print(error.toString()));
+
+//    => response.stream.bytesToString().then((value)
+//    => print(value.toString()))).catchError((error) => print(error.toString()));
+
+   // return future;
+
+
+//    return http
+//        .post(url, body: body, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication}, encoding: encoding)
+//        .then((http.Response response) {
+//      final String res = response.body;
+//      final int statusCode = response.statusCode;
+//
+//      if (statusCode < 200 || statusCode > 400 || json == null) {
+//        throw new Exception("Erro ao buscar informações");
+//      }
+//      return _decoder.convert(res);
+    //});
   }
 
   Future<dynamic> geWoutAuth(String url) async {

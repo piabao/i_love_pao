@@ -35,7 +35,7 @@ class Backer{
     this._cardImage = obj["cardImage"];
     this._site = obj["site"];
     this._email = obj["email"];
-    //this._averageRating = obj["averageRating"];
+    this._averageRating = obj["averageRating"];
     if(obj["addresses"] != null){
       var list = obj["addresses"].map<Address>((json) => Address.fromJson(json)).toList();
       this._address = list;

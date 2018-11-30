@@ -5,6 +5,8 @@ import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/screens/actions.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/action_button.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
+import 'package:i_love_pao/screens/util/toast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ActionMenu extends StatefulWidget {
@@ -136,8 +138,6 @@ Widget buildMenu() {
 
 Widget buildHotBread() {
   return new Scaffold(
-//    body: new Container(
-//      padding: new EdgeInsets.only(top: 32.0),
       body: new Column(
         children: <Widget>[
           new Text('Próxima formada sai em: '),
@@ -157,15 +157,12 @@ Widget buildHotBread() {
   );
 }
 
-final key = new GlobalKey();
-
 Widget buildRating(int id) {
   StarRating _rating = new StarRating();
   RestDatasource _api = new RestDatasource();
 
+  var progress = new AsyncProgress().initialize();
   return new Container(
-    //    body: new Container(
-    //      padding: new EdgeInsets.only(top: 32.0),
     child: new Column(
       children: <Widget>[
         new Center(
@@ -177,9 +174,17 @@ Widget buildRating(int id) {
         new FlatButton(
           child: new Text("Confirmar"),
           onPressed: () {
-            _api.saveBakeryRating(id, _rating.rating);
-            // TODO: salvar avaliação
-            //Navigator.of(context).pop();
+            showDialog(
+                context: _rating.context,
+
+                child: progress);
+            _api.saveBakeryRating(id, _rating.rating).then((value){
+              if(value){
+                MyToast.show("Avaliação cadastrada com sucesso!");
+              }
+              Navigator.pop(_rating.context);
+              Navigator.of(_rating.context).pop();
+            });
           },
         ),
       ],
@@ -189,22 +194,19 @@ Widget buildRating(int id) {
 }
 
 class StarRating extends StatefulWidget{
-  var _rating = 0.0;
+  StarRatingState obj;
 
   @override
   State<StatefulWidget> createState() {
-    return new StarRatingState(rating: _rating);
+    obj = new StarRatingState();
+    return obj;
   }
+  get context => obj.context;
 
-  get rating => _rating;
-
-  set rating(value) {
-    _rating = value;
-  }
+  get rating => obj.rating;
 }
 
 class StarRatingState extends State<StarRating>{
-  StarRatingState({this.rating});
   var rating = 0.0;
 
   @override

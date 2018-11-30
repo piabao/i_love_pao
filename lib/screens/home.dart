@@ -29,7 +29,7 @@ class home extends StatelessWidget {
     showDialog(context: context, child:
       new SimpleDialog(
         children: <Widget>[
-          new login()
+          new Login()
         ],
       )
     );
