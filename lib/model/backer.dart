@@ -10,6 +10,7 @@ class Backer{
   String _cardImage;
   String _site;
   String _email;
+  String _topic;
   List<Address> _address;
   bool _favorite = false;
   double _averageRating = 0.0;
@@ -35,6 +36,7 @@ class Backer{
     this._cardImage = obj["cardImage"];
     this._site = obj["site"];
     this._email = obj["email"];
+    this._topic = obj["topic"];
     this._averageRating = obj["averageRating"];
     if(obj["addresses"] != null){
       var list = obj["addresses"].map<Address>((json) => Address.fromJson(json)).toList();
@@ -56,6 +58,11 @@ class Backer{
     _favorite = value;
   }
 
+  String get topic => _topic;
+
+  set topic(String value) {
+    _topic = value;
+  }
 
   List<Address> get address => _address;
 

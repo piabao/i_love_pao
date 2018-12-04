@@ -30,36 +30,18 @@ class backerListState extends State<backerList> {
       AnimatedListState>();
   RestDatasource api = new RestDatasource();
   List<Backer> _list = new List<Backer>();
-
-
-//  teste() async {
-//    String username = 'teste';
-//    String password = '123';
-//    String basicAuth =
-//        'Basic ' + base64Encode(utf8.encode('$username:$password'));
-//    print(basicAuth);
-//
-//    Response r = await get('https://i-love-pao.herokuapp.com/bakery/getBackeryList',
-//        headers: {'authorization': basicAuth});
-//    print(r.statusCode);
-//    print(r.body);
-//    final parsed = json.decode(r.body).cast<Map<String, dynamic>>();
-//
-//    setState(() {
-//      _list = parsed.map<Backer>((json) => Backer.fromJson(json)).toList();
-//    });
-//    var responseJson = json.decode(r.body);
-//  }
-
-
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  
   void getList(){
     //teste();
     if(!_list.isEmpty ){
+      startFirebase();
       return;
     }
     api.getBackerList().then((List<Backer> list) {
       setState(() {
           _list = list;
+          startFirebase();
         });
     }).catchError((Exception error) {
       print(error);
@@ -79,12 +61,17 @@ class backerListState extends State<backerList> {
   }
 
   void onFilter(){
+//    getList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
     getList();
   }
 
   @override
   Widget build(BuildContext context) {
-    getList();
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Minhas Padarias'),
@@ -136,26 +123,6 @@ class backerListState extends State<backerList> {
       ),
     );
   }
-}
-
-class BackerItem extends StatefulWidget {
-  BackerItem({Key key, this.onTap, @required this.item});
-
-  final VoidCallback onTap;
-  final Backer item;
-
-  @override
-  State<StatefulWidget> createState() {
-    return new StateItem(key: key, onTap: onTap, item: this.item);
-  }
-}
-
-class StateItem extends State<BackerItem>{
-  StateItem({Key key, this.onTap, @required this.item});
-
-  final VoidCallback onTap;
-  final Backer item;
-  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   Widget _buildDialog(BuildContext context,  String name, String message) {
     return new AlertDialog(
@@ -182,11 +149,23 @@ class StateItem extends State<BackerItem>{
     ).then((bool shouldNavigate) {
     });
   }
-
-  @override
-  void initState() {
-    super.initState();
-    _firebaseMessaging.subscribeToTopic("ILovePaoMarlonH");
+  
+  void startFirebase() {
+    for(Backer bk in _list){
+      if(bk.topic == null){
+        continue;
+      }
+      _firebaseMessaging.unsubscribeFromTopic(bk.topic);
+    }
+    api.getBackerFavorites().then((List<Backer> list){
+      for(Backer bk in list){
+        if(bk.topic == null){
+          continue;
+        }
+        _firebaseMessaging.subscribeToTopic(bk.topic);
+      }
+    });
+    //_firebaseMessaging.subscribeToTopic("ILovePaoMarlonH");
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("onMessage: $message");
@@ -211,12 +190,31 @@ class StateItem extends State<BackerItem>{
       assert(token != null);
       setState(() {
         print("token: $token");
-         //_homeScreenText = "Push Messaging token: $token";
+        //_homeScreenText = "Push Messaging token: $token";
       });
-        print("token 2");
-       //print(_homeScreenText);
+      print("token 2");
+      //print(_homeScreenText);
     });
   }
+}
+
+class BackerItem extends StatefulWidget {
+  BackerItem({Key key, this.onTap, @required this.item});
+
+  final VoidCallback onTap;
+  final Backer item;
+
+  @override
+  State<StatefulWidget> createState() {
+    return new StateItem(key: key, onTap: onTap, item: this.item);
+  }
+}
+
+class StateItem extends State<BackerItem>{
+  StateItem({Key key, this.onTap, @required this.item});
+
+  final VoidCallback onTap;
+  final Backer item;
 
   Widget getThumbnail(){
     return new Container(

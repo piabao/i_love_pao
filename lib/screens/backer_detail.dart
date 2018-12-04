@@ -38,10 +38,13 @@ class DetailsState extends State<Details>{
   }
 
   @override
-  Widget build(BuildContext context) {
-
+  void initState() {
+    super.initState();
     getArtifacts();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return new Scaffold(
       body: new Container(
         constraints: new BoxConstraints.expand(),

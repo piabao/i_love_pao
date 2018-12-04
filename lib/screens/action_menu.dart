@@ -116,13 +116,19 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
         ),
       );
   }
+
+  Widget buildReceipe() {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) =>
+          new Container(
+            child: new Text(backer.artifacts.recipes[index].name),
+          ),//EntryItem(data[index]),
+      itemCount: backer.artifacts.recipes.length,
+    );
+  }
 }
 
-Widget buildReceipe() {
-  return Container(
 
-  );
-}
 
 Widget buildPromo() {
   return Container(

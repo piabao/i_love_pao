@@ -4,12 +4,12 @@ class Notification {
   int _id;
   String _name;
   String _description;
-  String _type;
+  int _type;
   DateTime _dateTime;
   int _bakeryId;
 
 
-  Notification(String name, String description, String type, DateTime dateTime, int bakeryId) {
+  Notification(String name, String description, int type, DateTime dateTime, int bakeryId) {
     this._name = name;
     this._description = description;
     this._type = type;
@@ -22,7 +22,7 @@ class Notification {
     this._name = obj["name"];
     this._description = obj["description"];
     this._type = obj["type"];
-    this._dateTime = obj["dateTime"];
+    //this._dateTime = DateTime.tryParse(obj["dateTime"]);
     this._bakeryId = obj["bakeryId"];
   }
 
@@ -38,9 +38,9 @@ class Notification {
     _dateTime = value;
   }
 
-  String get type => _type;
+  int get type => _type;
 
-  set type(String value) {
+  set type(int value) {
     _type = value;
   }
 

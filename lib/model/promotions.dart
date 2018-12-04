@@ -3,12 +3,12 @@ class Promotions {
   int _id;
   String _name;
   String _description;
-  String _price;
+  double _price;
   String _image;
   String _unit;
   int _bakeryId;
 
-  Promotions(String name, String description, String price, String image,
+  Promotions(String name, String description, double price, String image,
       String unit, int bakeryId) {
     this._name = name;
     this._description = description;
@@ -46,9 +46,9 @@ class Promotions {
     _image = value;
   }
 
-  String get price => _price;
+  double get price => _price;
 
-  set price(String value) {
+  set price(double value) {
     _price = value;
   }
 

@@ -14,9 +14,12 @@ class RestDatasource {
 
   static final LOGIN_URL = 'https://i-love-pao.herokuapp.com/user';
   static final REGISTER_URL = 'https://i-love-pao.herokuapp.com/register';
-  static final BACKER_LIST = 'https://i-love-pao.herokuapp.com/bakery/getBackeryList';
-  static final BACKER_ARTIFACTS = 'https://i-love-pao.herokuapp.com/bakery/getBackeryArtifacts';
-  static final SAVE_BAKERY_RATING = 'https://i-love-pao.herokuapp.com/bakery/saveBakeryRating';
+  static final BACKER_LIST = 'https://i-love-pao.herokuapp.com/mobile/getBackeryList';
+  static final BACKER_ARTIFACTS = 'https://i-love-pao.herokuapp.com/mobile/getBackeryArtifacts';
+  static final SAVE_BAKERY_RATING = 'https://i-love-pao.herokuapp.com/mobile/saveBakeryRating';
+  static final SAVE_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/saveFavoriteBakery';
+  static final DELETE_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/deleteFavoriteBakery';
+  static final GET_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/getFavorites';
 
   Future<User> login(String username, String password) async {
     _netUtil.setAuthorization(username, password);
@@ -45,10 +48,11 @@ class RestDatasource {
     return _netUtil.get(BACKER_ARTIFACTS+'/'+id.toString()).then((dynamic res) {
 
       print(res.toString());
-      final parsed = res.cast<Map<String, dynamic>>();
+      var bakeryArtifacts = BakeryArtifacts.fromJson(res);
+      //final parsed = res.cast<Map<String, dynamic>>();
 
       //if(res["error"]) throw new Exception(res["error_msg"]);
-      return parsed.map<BakeryArtifacts>((json) => BakeryArtifacts.fromJson(json));
+      return bakeryArtifacts; //parsed.map<BakeryArtifacts>((json) => BakeryArtifacts.fromJson(json));
     });
   }
 
@@ -61,6 +65,30 @@ class RestDatasource {
       }
       //if(res["error"]) throw new Exception(res["error_msg"]);
       return false;
+    });
+  }
+
+  Future<bool> toggleBakeryFavorite(int id, bool favorite) async {
+    if(favorite){
+      return _netUtil.post(SAVE_BAKERY_FAVORITE, {"bakery_id": id.toString()}).then((dynamic res) {
+        if(res != null){
+          return true;
+        }
+        return false;
+      });
+    }
+    return _netUtil.post( DELETE_BAKERY_FAVORITE, {"bakery_id": id.toString()}).then((dynamic res) {
+      if(res != null){
+        return true;
+      }
+      return false;
+    });
+  }
+
+  Future<List<Backer>> getBackerFavorites() async {
+    return _netUtil.get(GET_BAKERY_FAVORITE).then((dynamic res) {
+      final parsed = res.cast<Map<String, dynamic>>();
+      return parsed.map<Backer>((json) => Backer.fromJson(json)).toList();
     });
   }
 

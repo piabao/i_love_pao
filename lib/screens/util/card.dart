@@ -1,6 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/address.dart';
 import 'package:i_love_pao/model/backer.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
+import 'package:i_love_pao/screens/util/toast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class BackerCard extends StatefulWidget{
@@ -17,10 +21,28 @@ class BackerCard extends StatefulWidget{
 class CardState extends State<BackerCard> {
   CardState({this.item});
   final Backer item;
+  RestDatasource api = new RestDatasource();
+  final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   void onFavorite() {
+    var progress = new AsyncProgress().initialize();
     setState(() {
-      item.favorite = !item.favorite;
+      showDialog(
+          context: context,
+
+          child: progress);
+      api.toggleBakeryFavorite(item.id, !item.favorite).then((value){
+        if(value){
+          item.favorite = !item.favorite;
+          if(item.favorite){
+            _firebaseMessaging.subscribeToTopic(item.topic);
+          }else{
+            _firebaseMessaging.unsubscribeFromTopic(item.topic);
+          }
+          MyToast.show("Parabens! $item.name esta nos seus favoritos");
+        }
+        Navigator.pop(context);
+      });
     });
   }
 

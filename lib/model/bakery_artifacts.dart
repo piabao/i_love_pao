@@ -21,11 +21,31 @@ class BakeryArtifacts {
 
   BakeryArtifacts.fromJson(Map<String, dynamic> obj) {
     this._bakeryId = obj["bakeryId"];
-    this._actions = obj["actions"];
-    this._menu = obj["menu"];
-    this._promotions = obj["promotions"];
-    this._recipes = obj["recipes"];
-    this._notifications = obj["notifications"];
+
+    var act = obj['actions'] as List;
+    this._actions = act.map((i) =>
+        Action.fromJson(i)
+    ).toList();
+
+    var mn = obj["menu"] as List;
+    this._menu = mn.map((i) =>
+        Menu.fromJson(i)
+    ).toList();
+
+    var promo = obj["promotions"] as List;
+    this._promotions = promo.map((i) =>
+        Promotions.fromJson(i)
+    ).toList();
+
+    var rec = obj["recipes"] as List;
+    this._recipes = rec.map((i) =>
+        Recipes.fromJson(i)
+    ).toList();
+
+    var not = obj["notifications"] as List;
+    this._notifications = not.map((i) =>
+        Notification.fromJson(i)
+    ).toList();
   }
 
   List<Notification> get notifications => _notifications;
