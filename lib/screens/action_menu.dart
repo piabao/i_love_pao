@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
+import 'package:i_love_pao/model/bakery_artifacts.dart';
+import 'package:i_love_pao/model/recipes.dart';
 import 'package:i_love_pao/screens/actions.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/action_button.dart';
@@ -14,23 +19,30 @@ class ActionMenu extends StatefulWidget {
 
   Backer backer;
 
-@override
+  @override
   State<StatefulWidget> createState() {
     return new ActionMenuWidget(backer: backer);
   }
 }
 
-class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
+class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin {
   ActionMenuWidget({this.backer});
+
   Backer backer;
 
   AnimationController _controller;
 
-  List<ActionButton> icons =  [];
+  List<ActionButton> icons = [];
 
   @override
   void initState() {
-    icons = [new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()), new ActionButton('Cardápio', Icons.menu, buildMenu()), new ActionButton('Promoções', Icons.card_giftcard, buildPromo()), new ActionButton('Receitas', Icons.free_breakfast, buildReceipe()), new ActionButton('Avaliar', Icons.stars, buildRating(backer.id))] ;
+    icons = [
+      new ActionButton('Pão Quentinho', Icons.whatshot, buildHotBread()),
+      new ActionButton('Cardápio', Icons.menu, buildMenu()),
+      new ActionButton('Promoções', Icons.card_giftcard, buildPromo()),
+      new ActionButton('Receitas', Icons.free_breakfast, buildReceipe()),
+      new ActionButton('Avaliar', Icons.stars, buildRating(backer.id))
+    ];
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -43,55 +55,54 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
     Color backgroundColor = Theme.of(context).cardColor;
     Color foregroundColor = CurrentTheme.botaoAcao;
     return new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: new List.generate(icons.length, (int index) {
-          Widget child = new Container(
-            height: 50.0,
-            width: 180.0,
-            alignment: FractionalOffset.topRight,
-            child: new ScaleTransition(
-              alignment: Alignment.centerRight,
-              scale: new CurvedAnimation(
-                parent: _controller,
-                curve: new Interval(
-                    0.0,
-                    1.0 - index / icons.length / 2.0,
-                    curve: Curves.easeOut
-                ),
-              ),
-              child: new  Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  new Chip(label: new Text(icons.elementAt(index).label), backgroundColor: backgroundColor,),
-                  new FloatingActionButton(
-                    heroTag: ''+icons.elementAt(index).label,
-                    backgroundColor: backgroundColor,
-                    mini: true,
-                    child:  new Hero(
-                      tag: 'image-hero'+icons.elementAt(index).label,
-                      child:   new Icon(icons.elementAt(index).icon, color: foregroundColor),
-                    ),
-                    onPressed: () {
-                      Navigator.push(context, new ActionDialog(
-                          action: icons.elementAt(index),
-                          builder: (BuildContext context)
-                          {
-                            return new Container(
-
-                            );
-                          }
-                      )
-                      );
-                    },
-                  )
-                ],
-              ),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: new List.generate(icons.length, (int index) {
+        Widget child = new Container(
+          height: 50.0,
+          width: 180.0,
+          alignment: FractionalOffset.topRight,
+          child: new ScaleTransition(
+            alignment: Alignment.centerRight,
+            scale: new CurvedAnimation(
+              parent: _controller,
+              curve: new Interval(0.0, 1.0 - index / icons.length / 2.0,
+                  curve: Curves.easeOut),
             ),
-          );
-          return child;
-        }).toList()..add(
+            child: new Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                new Chip(
+                  label: new Text(icons.elementAt(index).label),
+                  backgroundColor: backgroundColor,
+                ),
+                new FloatingActionButton(
+                  heroTag: '' + icons.elementAt(index).label,
+                  backgroundColor: backgroundColor,
+                  mini: true,
+                  child: new Hero(
+                    tag: 'image-hero' + icons.elementAt(index).label,
+                    child: new Icon(icons.elementAt(index).icon,
+                        color: foregroundColor),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        new ActionDialog(
+                            action: icons.elementAt(index),
+                            builder: (BuildContext context) {
+                              return new Container();
+                            }));
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+        return child;
+      }).toList()
+        ..add(
           new FloatingActionButton(
             heroTag: "Generate",
             backgroundColor: foregroundColor,
@@ -99,9 +110,11 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
               animation: _controller,
               builder: (BuildContext context, Widget child) {
                 return new Transform(
-                  transform: new Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
+                  transform:
+                      new Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
                   alignment: FractionalOffset.center,
-                  child: new Icon(_controller.isDismissed ? Icons.add : Icons.close),
+                  child: new Icon(
+                      _controller.isDismissed ? Icons.add : Icons.close),
                 );
               },
             ),
@@ -114,50 +127,43 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin{
             },
           ),
         ),
-      );
+    );
   }
 
   Widget buildReceipe() {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) =>
-          new Container(
-            child: new Text(backer.artifacts.recipes[index].name),
-          ),//EntryItem(data[index]),
-      itemCount: backer.artifacts.recipes.length,
-    );
+    List<Recipes> items = backer.artifacts.recipes;
+    return new ListView(children: [
+      new Padding(
+        padding: new EdgeInsets.all(5.0),
+        child: new ExpansionItems(items: items),
+      )
+    ]);
   }
 }
 
-
-
 Widget buildPromo() {
-  return Container(
-
-  );
+  return Container();
 }
 
 Widget buildMenu() {
-  return Container(
-
-  );
+  return Container();
 }
 
 Widget buildHotBread() {
   return new Scaffold(
-      body: new Column(
-        children: <Widget>[
-          new Text('Próxima formada sai em: '),
-          new Container(
-            child: new Card(
+    body: new Column(
+      children: <Widget>[
+        new Text('Próxima formada sai em: '),
+        new Container(
+          child: new Card(
               color: CurrentTheme.cardBackground,
               margin: new EdgeInsets.only(top: 30.0),
               child: new Container(
                 padding: new EdgeInsets.all(15.0),
                 child: new Text('Pão Doce: 20/04/2018 18:30'),
-              )
-            ),
-          ),
-        ],
+              )),
+        ),
+      ],
 //      ),
     ),
   );
@@ -175,17 +181,14 @@ Widget buildRating(int id) {
           child: new Text('Qual é sua avaliação deste estabelecimento?'),
         ),
         new Container(
-          child:  _rating,
+          child: _rating,
         ),
         new FlatButton(
           child: new Text("Confirmar"),
           onPressed: () {
-            showDialog(
-                context: _rating.context,
-
-                child: progress);
-            _api.saveBakeryRating(id, _rating.rating).then((value){
-              if(value){
+            showDialog(context: _rating.context, child: progress);
+            _api.saveBakeryRating(id, _rating.rating).then((value) {
+              if (value) {
                 MyToast.show("Avaliação cadastrada com sucesso!");
               }
               Navigator.pop(_rating.context);
@@ -199,7 +202,7 @@ Widget buildRating(int id) {
   );
 }
 
-class StarRating extends StatefulWidget{
+class StarRating extends StatefulWidget {
   StarRatingState obj;
 
   @override
@@ -207,12 +210,13 @@ class StarRating extends StatefulWidget{
     obj = new StarRatingState();
     return obj;
   }
+
   get context => obj.context;
 
   get rating => obj.rating;
 }
 
-class StarRatingState extends State<StarRating>{
+class StarRatingState extends State<StarRating> {
   var rating = 0.0;
 
   @override
@@ -231,9 +235,61 @@ class StarRatingState extends State<StarRating>{
       ),
     );
   }
-
-
-
-
 }
 
+
+class ExpansionItems extends StatefulWidget {
+  ExpansionItems({this.items});
+  final List<Recipes> items;
+  @override
+  State<StatefulWidget> createState() {
+    return new ExpansionItemsState(items: items);
+  }
+}
+
+class ExpansionItemsState extends State<ExpansionItems> {
+  ExpansionItemsState({this.items});
+  final List<Recipes> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return new ExpansionPanelList(
+      expansionCallback: (int index, bool isExpanded){
+        setState(() {
+          items[index].isExpanded = !items[index].isExpanded;
+        });
+      },
+      children:items.map(_createPanel).toList(),
+    );
+  }
+
+  ExpansionPanel _createPanel(Recipes item){
+    return new ExpansionPanel(
+        headerBuilder: (BuildContext context, bool isExpanded){
+          return new Container(
+            padding: new EdgeInsets.all(10.0),
+            child: new Text('${item.name}'),
+          );
+        },
+        body: new Padding(
+          padding: new EdgeInsets.all(10.0),
+          child: new Column(
+            children: <Widget>[
+              new Container(
+                margin: new EdgeInsets.only(left: 110.0, top: 0.0),
+//                child: CachedNetworkImage(
+//                  placeholder: CircularProgressIndicator(),
+//                  width: 100.0,
+//                  imageUrl: item.image,
+//                ),//new Image.asset(backer.logo, width: 100.0,),
+                height: 100.0,
+                width: 100.0,
+              ),
+              new Text(item.description),
+            ],
+          ),
+        ),
+        isExpanded: item.isExpanded
+    );
+  }
+}

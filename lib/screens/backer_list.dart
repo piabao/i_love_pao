@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/backer.dart';
+import 'package:i_love_pao/model/bakery_artifacts.dart';
 import 'package:i_love_pao/screens/backer_detail.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
 import 'package:i_love_pao/screens/util/card.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -54,8 +56,18 @@ class backerListState extends State<backerList> {
     return new BackerItem(
       item: _list[index],
       onTap: () {
+        var progress = new AsyncProgress().initialize();
+        showDialog(context: context, child: progress);
         var item =  _list[index];
-        Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(backer: item)));
+        api.getBackerArtifacts(item.id).then((BakeryArtifacts bkArt) {
+          setState(() {
+            item.artifacts = bkArt;
+            Navigator.pop(context);
+            Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(backer: item)));
+          });
+        }).catchError((Exception error) {
+          print(error);
+        });
       }
     );
   }

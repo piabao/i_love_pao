@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="i_love_pao"
+        android:label="Eu amo pão"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

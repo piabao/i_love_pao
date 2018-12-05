@@ -23,24 +23,12 @@ class Details extends StatefulWidget{
 class DetailsState extends State<Details>{
   DetailsState({this.backer});
   RestDatasource api = new RestDatasource();
-  //BakeryArtifacts _bkArt = new BakeryArtifacts();
   final Backer backer;
-
-  void getArtifacts(){
-    //teste();
-    api.getBackerArtifacts(backer.id).then((BakeryArtifacts bkArt) {
-      setState(() {
-        backer.artifacts = bkArt;
-      });
-    }).catchError((Exception error) {
-      print(error);
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    getArtifacts();
+    //getArtifacts();
   }
 
   @override

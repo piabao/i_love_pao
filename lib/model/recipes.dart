@@ -5,6 +5,7 @@ class Recipes {
   String _description;
   String _image;
   int _bakeryId;
+  bool _isExpanded = false;
 
   Recipes(String name, String description,  String image, int bakeryId) {
     this._name = name;
@@ -19,6 +20,12 @@ class Recipes {
     this._description = obj["description"];
     this._image = obj["image"];
     this._bakeryId = obj["bakeryId"];
+  }
+
+  bool get isExpanded => _isExpanded;
+
+  set isExpanded(bool value) {
+    _isExpanded = value;
   }
 
   int get bakeryId => _bakeryId;

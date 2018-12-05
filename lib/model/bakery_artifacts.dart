@@ -16,8 +16,13 @@ class BakeryArtifacts {
 
   BakeryArtifacts();
 
-  //  BakeryArtifacts(this._bakeryId, this._actions, this._menu, this._promotions,
-//      this._recipes, this._notifications);
+  BakeryArtifacts.empty(){
+    this._actions = new List<Action>();
+    this._menu = new List<Menu>();
+    this._promotions = new List<Promotions>();
+    this._recipes = new List<Recipes>();
+    this._notifications = new List<Notification>();
+  }
 
   BakeryArtifacts.fromJson(Map<String, dynamic> obj) {
     this._bakeryId = obj["bakeryId"];
