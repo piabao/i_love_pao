@@ -8,6 +8,7 @@ class Menu {
   String _image;
   String _unit;
   int _bakeryId;
+  bool _isExpanded = false;
 
   Menu(String name, String description, double price, String image, String unit, int bakeryId) {
     this._name = name;
@@ -26,6 +27,12 @@ class Menu {
     this._image = obj["image"];
     this._unit = obj["unit"];
     this._bakeryId = obj["bakeryId"];
+  }
+
+  bool get isExpanded => _isExpanded;
+
+  set isExpanded(bool value) {
+    _isExpanded = value;
   }
 
   int get bakeryId => _bakeryId;

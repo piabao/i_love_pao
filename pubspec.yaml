@@ -15,6 +15,7 @@ dependencies:
   fluttertoast: ^2.1.1
   progress_hud: ^1.1.0
   flutter_launcher_icons: "^0.7.0"
+  money: ^0.2.1
 
 dev_dependencies:
   flutter_test:

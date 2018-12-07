@@ -12,7 +12,7 @@ class BakeryArtifacts {
   List<Menu> _menu;
   List<Promotions> _promotions;
   List<Recipes> _recipes;
-  List<Notification> _notifications;
+  List<Notifications> _notifications;
 
   BakeryArtifacts();
 
@@ -21,7 +21,7 @@ class BakeryArtifacts {
     this._menu = new List<Menu>();
     this._promotions = new List<Promotions>();
     this._recipes = new List<Recipes>();
-    this._notifications = new List<Notification>();
+    this._notifications = new List<Notifications>();
   }
 
   BakeryArtifacts.fromJson(Map<String, dynamic> obj) {
@@ -49,13 +49,13 @@ class BakeryArtifacts {
 
     var not = obj["notifications"] as List;
     this._notifications = not.map((i) =>
-        Notification.fromJson(i)
+        Notifications.fromJson(i)
     ).toList();
   }
 
-  List<Notification> get notifications => _notifications;
+  List<Notifications> get notifications => _notifications;
 
-  set notifications(List<Notification> value) {
+  set notifications(List<Notifications> value) {
     _notifications = value;
   }
 

@@ -7,6 +7,7 @@ class Promotions {
   String _image;
   String _unit;
   int _bakeryId;
+  bool _isExpanded = false;
 
   Promotions(String name, String description, double price, String image,
       String unit, int bakeryId) {
@@ -26,6 +27,12 @@ class Promotions {
     this._image = obj["image"];
     this._unit = obj["unit"];
     this._bakeryId = obj["bakeryId"];
+  }
+
+  bool get isExpanded => _isExpanded;
+
+  set isExpanded(bool value) {
+    _isExpanded = value;
   }
 
   int get bakeryId => _bakeryId;

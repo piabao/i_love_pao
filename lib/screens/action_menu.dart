@@ -6,10 +6,17 @@ import 'dart:math' as math;
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/bakery_artifacts.dart';
+import 'package:i_love_pao/model/menu.dart';
+import 'package:i_love_pao/model/notification.dart';
+import 'package:i_love_pao/model/promotions.dart';
 import 'package:i_love_pao/model/recipes.dart';
 import 'package:i_love_pao/screens/actions.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/action_button.dart';
+import 'package:i_love_pao/screens/menu_panel.dart';
+import 'package:i_love_pao/screens/notifications_panel.dart';
+import 'package:i_love_pao/screens/promotion_panel.dart';
+import 'package:i_love_pao/screens/recipes_panel.dart';
 import 'package:i_love_pao/screens/util/async_progress.dart';
 import 'package:i_love_pao/screens/util/toast.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -135,38 +142,40 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin {
     return new ListView(children: [
       new Padding(
         padding: new EdgeInsets.all(5.0),
-        child: new ExpansionItems(items: items),
+        child: new RecepesExpansionItems(items: items),
       )
     ]);
   }
-}
 
-Widget buildPromo() {
-  return Container();
-}
+  Widget buildMenu() {
+    List<Menu> items = backer.artifacts.menu;
+    return new ListView(children: [
+      new Padding(
+        padding: new EdgeInsets.all(5.0),
+        child: new MenuExpansionItems(items: items),
+      )
+    ]);
+  }
 
-Widget buildMenu() {
-  return Container();
-}
+  Widget buildPromo() {
+    List<Promotions> items = backer.artifacts.promotions;
+    return new ListView(children: [
+      new Padding(
+        padding: new EdgeInsets.all(5.0),
+        child: new PromotionExpansionItems(items: items),
+      )
+    ]);
+  }
 
-Widget buildHotBread() {
-  return new Scaffold(
-    body: new Column(
-      children: <Widget>[
-        new Text('Próxima formada sai em: '),
-        new Container(
-          child: new Card(
-              color: CurrentTheme.cardBackground,
-              margin: new EdgeInsets.only(top: 30.0),
-              child: new Container(
-                padding: new EdgeInsets.all(15.0),
-                child: new Text('Pão Doce: 20/04/2018 18:30'),
-              )),
-        ),
-      ],
-//      ),
-    ),
-  );
+  Widget buildHotBread() {
+    List<Notifications> notifications = backer.artifacts.notifications;
+    return new ListView(children: [
+      new Padding(
+        padding: new EdgeInsets.all(5.0),
+        child: new NotificationsItems(items: notifications),
+      )
+    ]);
+  }
 }
 
 Widget buildRating(int id) {
@@ -233,63 +242,6 @@ class StarRatingState extends State<StarRating> {
           });
         },
       ),
-    );
-  }
-}
-
-
-class ExpansionItems extends StatefulWidget {
-  ExpansionItems({this.items});
-  final List<Recipes> items;
-  @override
-  State<StatefulWidget> createState() {
-    return new ExpansionItemsState(items: items);
-  }
-}
-
-class ExpansionItemsState extends State<ExpansionItems> {
-  ExpansionItemsState({this.items});
-  final List<Recipes> items;
-
-  @override
-  Widget build(BuildContext context) {
-    return new ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded){
-        setState(() {
-          items[index].isExpanded = !items[index].isExpanded;
-        });
-      },
-      children:items.map(_createPanel).toList(),
-    );
-  }
-
-  ExpansionPanel _createPanel(Recipes item){
-    return new ExpansionPanel(
-        headerBuilder: (BuildContext context, bool isExpanded){
-          return new Container(
-            padding: new EdgeInsets.all(10.0),
-            child: new Text('${item.name}'),
-          );
-        },
-        body: new Padding(
-          padding: new EdgeInsets.all(10.0),
-          child: new Column(
-            children: <Widget>[
-              new Container(
-                margin: new EdgeInsets.only(left: 110.0, top: 0.0),
-//                child: CachedNetworkImage(
-//                  placeholder: CircularProgressIndicator(),
-//                  width: 100.0,
-//                  imageUrl: item.image,
-//                ),//new Image.asset(backer.logo, width: 100.0,),
-                height: 100.0,
-                width: 100.0,
-              ),
-              new Text(item.description),
-            ],
-          ),
-        ),
-        isExpanded: item.isExpanded
     );
   }
 }

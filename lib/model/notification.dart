@@ -1,5 +1,5 @@
 
-class Notification {
+class Notifications {
 
   int _id;
   String _name;
@@ -9,7 +9,7 @@ class Notification {
   int _bakeryId;
 
 
-  Notification(String name, String description, int type, DateTime dateTime, int bakeryId) {
+  Notifications(String name, String description, int type, DateTime dateTime, int bakeryId) {
     this._name = name;
     this._description = description;
     this._type = type;
@@ -17,7 +17,7 @@ class Notification {
     this._bakeryId = bakeryId;
   }
 
-  Notification.fromJson(Map<String, dynamic> obj) {
+  Notifications.fromJson(Map<String, dynamic> obj) {
     this._id = obj["id"];
     this._name = obj["name"];
     this._description = obj["description"];
