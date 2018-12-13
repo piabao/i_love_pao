@@ -7,6 +7,7 @@ import 'package:i_love_pao/screens/util/card.dart';
 import 'package:i_love_pao/screens/util/text_style.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/screens/action_menu.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -78,7 +79,23 @@ class DetailsState extends State<Details>{
     );
   }
 
+  void _launchMapsUrl(double lat, double lon) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Mapa não encontrado $url';
+    }
+  }
+
   Widget _getContent() {
+    var lon;
+    var lat;
+    if(backer.address.isNotEmpty){
+      lon = backer.address[0].lon;
+      lat = backer.address[0].lat;
+    }
+
         return new ListView(
           children: <Widget>[
             new Stack(
@@ -89,14 +106,15 @@ class DetailsState extends State<Details>{
                   child: new BackerCard(item: this.backer),
                 ),
                 new Container(
-                  margin: new EdgeInsets.only(left: 110.0, top: 0.0),
+                  alignment: Alignment.center,
+                  //margin: new EdgeInsets.only(left: 110.0, top: 0.0),
                   child: CachedNetworkImage(
                     placeholder: CircularProgressIndicator(),
                     width: 100.0,
                     imageUrl: backer.logo,
                   ),//new Image.asset(backer.logo, width: 100.0,),
                   height: 100.0,
-                  width: 100.0,
+                 // width: 100.0,
                 ),
               ],
             ),
@@ -112,7 +130,17 @@ class DetailsState extends State<Details>{
                     width: 18.0,
                     color: new Color(0xFF00c6ff),
                   ),
-                  new Text(backer.description, style: Style.baseTextStyle)
+                  new Text(backer.description, style: Style.baseTextStyle),
+                  lon != null ? new Container(
+                    padding: new EdgeInsets.all(5.0),
+                    child: new RaisedButton(child: new Text('Localização'),
+                        onPressed: (){
+                          setState((){
+                            //apiCall=true; // Set state like this
+                          });
+                          _launchMapsUrl(lat, lon);
+                        }),
+                  ) : new Container(child: new RaisedButton(onPressed: null,  child: new Text("Localização não disponivel"))),
                 ],
               ),
             ),

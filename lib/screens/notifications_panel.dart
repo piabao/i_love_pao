@@ -1,28 +1,33 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/model/notification.dart';
+import 'package:i_love_pao/model/promotions.dart';
+import 'package:money/money.dart';
 
-class NotificationsItems extends StatefulWidget {
-  NotificationsItems({this.items});
+class NotificationsExpansionItems extends StatefulWidget {
+  NotificationsExpansionItems({this.items});
   final List<Notifications> items;
   @override
   State<StatefulWidget> createState() {
-    return new NotificationsItemsState(items: items);
+    return new NotificationsExpansionItemsState(items: items);
   }
 }
 
-class NotificationsItemsState extends State<NotificationsItems> {
-  NotificationsItemsState({this.items});
+class NotificationsExpansionItemsState extends State<NotificationsExpansionItems> {
+  NotificationsExpansionItemsState({this.items});
   final List<Notifications> items;
 
   @override
   Widget build(BuildContext context) {
-
     return new Container(
-      padding: const EdgeInsets.all(16.0),
-      child: new ListView.builder(
-          itemBuilder: (BuildContext context, int index) => _createPanel(items[index]),
-          itemCount: items.length),
+      constraints: BoxConstraints(maxHeight: 500.0),
+      child: new Drawer(
+       child: new ListView.builder(
+           itemBuilder: (BuildContext context, int index) => _createPanel(items[index]),
+         itemCount: items.length,
+       ),
+    ),
     );
   }
 
@@ -31,7 +36,8 @@ class NotificationsItemsState extends State<NotificationsItems> {
     return new Container(
       child: new Column(
         children: <Widget>[
-          new Text(item.name),
+          new Container(padding: EdgeInsets.only(top: 15.0),),
+          new Text(item.name, style: new TextStyle(fontWeight: FontWeight.bold, fontSize: CurrentTheme.titleFontSize) ,),
           new Container(
             child: new Card(
                 color: CurrentTheme.cardBackground,

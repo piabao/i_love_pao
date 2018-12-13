@@ -168,13 +168,17 @@ class ActionMenuWidget extends State<ActionMenu> with TickerProviderStateMixin {
   }
 
   Widget buildHotBread() {
-    List<Notifications> notifications = backer.artifacts.notifications;
-    return new ListView(children: [
-      new Padding(
-        padding: new EdgeInsets.all(5.0),
-        child: new NotificationsItems(items: notifications),
-      )
-    ]);
+    List<Notifications> items = backer.artifacts.notifications;
+    return new Container(
+      constraints: BoxConstraints(maxHeight: 500.0, maxWidth: 500.0),
+      child: new ListView(children: [
+        new Padding(
+          padding: new EdgeInsets.all(5.0),
+          child: new NotificationsExpansionItems(items: items),
+          //child: new NotificationsItems(items: notifications),
+        )
+      ]),
+    );
   }
 }
 

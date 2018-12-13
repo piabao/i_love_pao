@@ -86,10 +86,11 @@ class backerListState extends State<backerList> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Minhas Padarias'),
+        title: new Text('Meus Estabelecimentos'),
         backgroundColor: new Color(0xFF330808),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.filter), onPressed: (){onFilter();}),
+          //TODO: criar filtro; por exemplo: favoritos, mais próximos
+          //new IconButton(icon: new Icon(Icons.filter), onPressed: (){onFilter();}),
         ],
       ),
       drawer: new Drawer(
