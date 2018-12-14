@@ -99,4 +99,7 @@ class RestDatasource {
       return user;
     });
   }
+  User get loggedUser {
+    return _netUtil.getAuthorization();
+  }
 }

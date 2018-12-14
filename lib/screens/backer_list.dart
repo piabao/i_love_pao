@@ -4,6 +4,7 @@ import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/backer.dart';
 import 'package:i_love_pao/model/bakery_artifacts.dart';
 import 'package:i_love_pao/screens/backer_detail.dart';
+import 'package:i_love_pao/screens/user_side_panel.dart';
 import 'package:i_love_pao/screens/util/async_progress.dart';
 import 'package:i_love_pao/screens/util/card.dart';
 
@@ -93,41 +94,7 @@ class backerListState extends State<backerList> {
           //new IconButton(icon: new Icon(Icons.filter), onPressed: (){onFilter();}),
         ],
       ),
-      drawer: new Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the Drawer if there isn't enough vertical
-        // space to fit everything.
-        child: new ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new DrawerHeader(
-              child: new Text('Drawer Header'),
-              decoration: new BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            new ListTile(
-              title: new Text('Item 1'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            new ListTile(
-              title: new Text('Item 2'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: new SidePanel(),
       body: new Container(
         padding: const EdgeInsets.all(16.0),
         child: new ListView.builder(
