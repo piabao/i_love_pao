@@ -9,6 +9,11 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;
 
+  final String tableUser = 'User';
+  final String columnId = 'id';
+  final String columnName = 'username';
+  final String columnPass = 'password';
+
   static Database _db;
 
   Future<Database> get db async {
@@ -23,6 +28,7 @@ class DatabaseHelper {
   initDb() async {
     var documentsDirectory = await getDatabasesPath();
     String path = join(documentsDirectory, "main.db");
+//    await deleteDatabase(path); // just for testing
     var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
     return theDb;
   }
@@ -37,9 +43,29 @@ class DatabaseHelper {
 
   Future<int> saveUser(User user) async {
     var dbClient = await db;
-    int res = await dbClient.insert("User", user.toMap());
+    var usr = await getUser();
+    if(usr != null){
+      var del = await deleteUsers();
+    }
+    var res = await dbClient.insert("User", user.toMap());
     print("User inserido");
     return res;
+  }
+
+  Future<User> getUser() async {
+    var dbClient = await db;
+    List<Map> result = await dbClient.query(tableUser,
+        columns: [columnId, columnName, columnPass]
+        //where: '$columnId = ?',
+       // whereArgs: [id]
+    );
+//    var result = await dbClient.rawQuery('SELECT * FROM $tableNote WHERE $columnId = $id');
+
+    if (result.length > 0) {
+      return new User.fromMap(result.first);
+    }
+
+    return null;
   }
 
   Future<int> deleteUsers() async {

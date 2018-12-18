@@ -46,7 +46,8 @@ class LoginState extends State<Login>{
   
   @override
   Widget build(BuildContext context) {
-    return new Center(
+    return new SingleChildScrollView (
+     child: new Center(
         child: new Container(
           child: new Padding(
               padding: const EdgeInsets.all(15.0),
@@ -117,6 +118,7 @@ class LoginState extends State<Login>{
               )
           ),
         ),
-      );
+     )
+    );
   }
 }

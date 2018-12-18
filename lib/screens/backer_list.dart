@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
@@ -7,16 +9,17 @@ import 'package:i_love_pao/screens/backer_detail.dart';
 import 'package:i_love_pao/screens/user_side_panel.dart';
 import 'package:i_love_pao/screens/util/async_progress.dart';
 import 'package:i_love_pao/screens/util/card.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'dart:convert';
+import 'package:device_info/device_info.dart';
 
 import 'package:http/http.dart';
 
-import 'package:i_love_pao/database/backerListMock.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:package_info/package_info.dart';
 
 
 class backerList extends StatefulWidget {
@@ -51,24 +54,49 @@ class backerListState extends State<backerList> {
     });
   }
   //new backerListMock().getList();
+  void _callArtifacts(Backer item) async {
+    var progress = new AsyncProgress().initialize();
+    showDialog(context: context, child: progress);
 
+    String os = null;
+    String model = null;
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      os = 'IOS';
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      model = iosInfo != null ? iosInfo.utsname.machine : null;
+    } else if (Platform.isAndroid) {
+      os ='Andriod';
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      model = androidInfo != null ? androidInfo.model : null;
+    }
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String version = packageInfo != null ? packageInfo.version : null;
+
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    String lon = position!= null && position.longitude != null ? position.longitude.toString() : null;
+    String lat = position!= null && position.latitude != null ? position.latitude.toString() : null;
+    api.getBackerArtifacts(item.id, os, model, version, lon, lat).then((BakeryArtifacts bkArt) {
+      setState(() {
+        item.artifacts = bkArt;
+        Navigator.pop(context);
+        Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(backer: item)));
+      });
+    }).catchError((Exception error) {
+      Navigator.pop(context);
+      print(error);
+    });
+  }
   // Used to build list items that haven't been removed.
   Widget buildItem(BuildContext context, int index) {
+
     return new BackerItem(
       item: _list[index],
       onTap: () {
-        var progress = new AsyncProgress().initialize();
-        showDialog(context: context, child: progress);
         var item =  _list[index];
-        api.getBackerArtifacts(item.id).then((BakeryArtifacts bkArt) {
-          setState(() {
-            item.artifacts = bkArt;
-            Navigator.pop(context);
-            Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new Details(backer: item)));
-          });
-        }).catchError((Exception error) {
-          print(error);
-        });
+        _callArtifacts(item);
       }
     );
   }
@@ -176,6 +204,8 @@ class backerListState extends State<backerList> {
       //print(_homeScreenText);
     });
   }
+
+
 }
 
 class BackerItem extends StatefulWidget {

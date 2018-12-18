@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
+import 'package:i_love_pao/database/local/database_helper.dart';
 import 'package:i_love_pao/database/rest_ds.dart';
 import 'package:i_love_pao/model/notification.dart';
 import 'package:i_love_pao/model/promotions.dart';
+import 'package:i_love_pao/model/user.dart';
 import 'package:i_love_pao/screens/home.dart';
-import 'package:money/money.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
+import 'package:i_love_pao/screens/util/toast.dart';
+import 'package:package_info/package_info.dart';
 
 class SidePanel extends StatefulWidget {
 
@@ -17,7 +21,9 @@ class SidePanel extends StatefulWidget {
 
 class SidePanelState extends State<SidePanel> {
   RestDatasource api = new RestDatasource();
-
+  final oldPassController = new TextEditingController();
+  final newPassController = new TextEditingController();
+  final confirmPassController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +56,34 @@ class SidePanelState extends State<SidePanel> {
           new ListTile(
             title: new Text('Trocar Senha'),
             onTap: () {
-              //TODO: chamar panel
-              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: new Text("Trocar Senha"),
+                    content: new SingleChildScrollView (child:_passwordChangePanel()),
+                  );
+                },
+              );
             },
           ),
           new ListTile(
             title: new Text('Sair'),
             onTap: () {
               //TODO: deslogar
+              var db = new DatabaseHelper();
+              db.deleteUsers();
               Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new home()));
+            },
+          ),
+          new ListTile(
+            title: new Text('Informações'),
+            onTap: () {
+              PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+                _showInformationDialog(packageInfo.appName, packageInfo.version);
+                //String buildNumber = packageInfo.buildNumber;
+              });
+//              Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new home()));
             },
           ),
         ],
@@ -66,27 +91,130 @@ class SidePanelState extends State<SidePanel> {
     );
   }
 
-  Widget _createPanel(Notifications item){
-
-    return new Container(
-      child: new Column(
-        children: <Widget>[
-          new Container(padding: EdgeInsets.only(top: 15.0),),
-          new Text(item.name, style: new TextStyle(fontWeight: FontWeight.bold, fontSize: CurrentTheme.titleFontSize) ,),
-          new Container(
-            child: new Card(
-                color: CurrentTheme.cardBackground,
-                margin: new EdgeInsets.only(top: 30.0),
-                child: new Container(
-                  padding: new EdgeInsets.all(15.0),
-                  child: new Text(item.description),
-                )),
-          ),
-          //new Text(item.dateTime.toIso8601String()),
-        ],
-//      ),
-      ),
+  void _showInformationDialog(String name, String version) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Informações sobre o applicativo"),
+          content: new Text('Versão: $version'),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
 
+  Widget _passwordChangePanel() {
+    return new Center(
+      child: new Container(
+       // child: new Padding(
+          //padding: const EdgeInsets.all(15.0),
+          child: new Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Container(
+                padding: new EdgeInsets.all(10.0),
+                child: new TextField(
+                  controller: oldPassController,
+                  obscureText: true,
+                  decoration: new InputDecoration(
+                      labelText: 'Senha atual',
+                      contentPadding: new EdgeInsets.all(15.0),
+                      hintText: 'Senha atual'
+                  ),
+                ),
+              ),
+              new Container(
+                padding: new EdgeInsets.all(10.0),
+                child: new TextField(
+                  controller: newPassController,
+                  obscureText: true,
+                  decoration: new InputDecoration(
+                      labelText: 'Nova senha',
+                      contentPadding: new EdgeInsets.all(15.0),
+                      hintText: 'Nova senha'
+                  ),
+                ),
+              ),
+              new Container(
+                padding: new EdgeInsets.all(10.0),
+                child: new TextField(
+                  controller: confirmPassController,
+                  obscureText: true,
+                  decoration: new InputDecoration(
+                      labelText: 'Comfirmar nova senha',
+                      contentPadding: new EdgeInsets.all(15.0),
+                      hintText: 'Confirmação'
+                  ),
+                ),
+              ),
+
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Container(
+                    padding: new EdgeInsets.all(5.0),
+                    child: new RaisedButton(child: new Text('Comfirmar'),
+                        onPressed: (){
+                          setState((){
+                            //apiCall=true; // Set state like this
+                          });
+                          _comfirmChange();
+                        }),
+                  ),
+                  new Container(
+                      padding: new EdgeInsets.all(5.0),
+                      child: new RaisedButton(child: new Text('Cancelar'),onPressed: (){Navigator.of(context).pop();})
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+//        decoration: new BoxDecoration(
+//            color: Colors.white.withOpacity(0.2),
+//            borderRadius: new BorderRadius.only(
+//                topLeft: const Radius.circular(5.0),
+//                topRight: const Radius.circular(5.0)
+//            )
+//        ),
+//      ),
+    );
+  }
+
+  void _comfirmChange() {
+    var progress = new AsyncProgress().initialize();
+
+    if(newPassController.text != confirmPassController.text){
+      MyToast.error("A confirmação da senha está diferente da senha escolhida!");
+      return;
+    }
+    if(oldPassController.text != api.loggedUser.password){
+      MyToast.error("Senha atual incorreta!");
+      Navigator.of(context).pop();
+      return;
+    }
+    showDialog(
+        context: context,
+        child: progress);
+    api.changePass(newPassController.text).then((user) {
+      setState(() {
+        MyToast.show("Senha alterada com sucesso!");
+        var db = new DatabaseHelper();
+        db.deleteUsers();
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed('/home');
+      });
+    }).catchError((Exception error) {
+        Navigator.of(context).pop();
+        MyToast.error('Ocorreu um erro ao tentar executar esta ação!');
+    });
   }
 }

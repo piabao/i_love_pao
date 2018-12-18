@@ -20,6 +20,7 @@ class RestDatasource {
   static final SAVE_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/saveFavoriteBakery';
   static final DELETE_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/deleteFavoriteBakery';
   static final GET_BAKERY_FAVORITE = 'https://i-love-pao.herokuapp.com/mobile/getFavorites';
+  static final CHANGE_PASSWORD = 'https://i-love-pao.herokuapp.com/mobile/changePass';
 
   Future<User> login(String username, String password) async {
     _netUtil.setAuthorization(username, password);
@@ -27,8 +28,8 @@ class RestDatasource {
         //if(res["error"]) throw new Exception(res["error_msg"]);
 
         var user = new User.map(res);
-  //      var db = new DatabaseHelper();
-  //      db.saveUser(user);
+        var db = new DatabaseHelper();
+        db.saveUser(new User(user.username, password));
         return user;
       });
   }
@@ -44,8 +45,8 @@ class RestDatasource {
     });
   }
 
-  Future<BakeryArtifacts> getBackerArtifacts(int id) async {
-    return _netUtil.get(BACKER_ARTIFACTS+'/'+id.toString()).then((dynamic res) {
+  Future<BakeryArtifacts> getBackerArtifacts(int id, String os, String model, String packageInfo, String lon, String lat) async {
+    return _netUtil.get(BACKER_ARTIFACTS+'/'+id.toString()+'/'+os+'/'+model+'/'+packageInfo+'/'+lon+'/'+lat).then((dynamic res) {
 
       print(res.toString());
       var bakeryArtifacts = BakeryArtifacts.fromJson(res);
@@ -101,5 +102,14 @@ class RestDatasource {
   }
   User get loggedUser {
     return _netUtil.getAuthorization();
+  }
+
+  Future<User> changePass(String password) {
+    return _netUtil.post( CHANGE_PASSWORD, {"oldPass": loggedUser.password, "newPass": password}).then((dynamic res) {
+      var user = new User.map(res);
+      //      var db = new DatabaseHelper();
+      //      db.saveUser(user);
+      return user;
+    });
   }
 }

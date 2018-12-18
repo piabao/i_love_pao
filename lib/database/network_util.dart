@@ -52,7 +52,7 @@ class NetworkUtil {
 //    request.headers[HttpHeaders.AUTHORIZATION] = 'Basic ' + _authetication;
 //    request.bodyFields = body;
 
-    var response = await client.post(url, headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication});
+    var response = await client.post(url, body: body,headers: {HttpHeaders.AUTHORIZATION: 'Basic ' + _authetication});
 
     var responseJson = json.decode(response.body);
     int statusCode = response.statusCode;
