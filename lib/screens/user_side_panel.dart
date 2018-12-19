@@ -68,15 +68,6 @@ class SidePanelState extends State<SidePanel> {
             },
           ),
           new ListTile(
-            title: new Text('Sair'),
-            onTap: () {
-              //TODO: deslogar
-              var db = new DatabaseHelper();
-              db.deleteUsers();
-              Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new home()));
-            },
-          ),
-          new ListTile(
             title: new Text('Informações'),
             onTap: () {
               PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -86,6 +77,16 @@ class SidePanelState extends State<SidePanel> {
 //              Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new home()));
             },
           ),
+          new ListTile(
+            title: new Text('Sair'),
+            onTap: () {
+              //TODO: deslogar
+              var db = new DatabaseHelper();
+              db.deleteUsers();
+              Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => new home()));
+            },
+          ),
+
         ],
       ),
     );

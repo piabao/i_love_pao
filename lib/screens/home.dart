@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
 import 'package:i_love_pao/database/local/database_helper.dart';
@@ -81,7 +83,7 @@ class home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(onWillPop: () async => false, child: new Scaffold(
+    return new WillPopScope(onWillPop: () { exit(0);}, child: new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: new Container(
         padding: new EdgeInsets.all(32.0),

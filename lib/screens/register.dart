@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:i_love_pao/code/theme.dart';
 
 import 'package:i_love_pao/database/rest_ds.dart';
+import 'package:i_love_pao/screens/util/async_progress.dart';
+import 'package:i_love_pao/screens/util/toast.dart';
 
 class register extends StatefulWidget {
   @override
@@ -55,18 +57,27 @@ class registerState extends State<register> {
   }
 
   void _callRegistrarApi() {
+    var progress = new AsyncProgress().initialize();
+    FocusScope.of(context).requestFocus(new FocusNode());
+
     if(passController.text != confirmPassController.text){
-      _showDialog("A confirmação da senha está diferente da senha escolhida!");
+      MyToast.error("A confirmação da senha está diferente da senha escolhida!");
       return;
     }
+    showDialog(
+        context: context,
+        child: progress);
     api.register(userController.text, passController.text).then((user) {
       setState(() {
-        _showDialog("Uma confirmação foi enviada para o seu e-mail, por favor acesse o link enviado no seu e-mail para confirmar seu registro!");
+        MyToast.show("Uma confirmação foi enviada para o seu e-mail, por favor acesse o link enviado no seu e-mail para confirmar seu registro!");
+        Navigator.pop(context);
         Navigator.of(context).pushNamed('/home');
       });
     }).catchError((Exception error) {
       setState(() {
+        Navigator.pop(context);
         apiCall = false; //Disable Progressbar
+        MyToast.error('Erro ao registrar esse email!');
         _currentLogin = 'Erro ao registrar esse email!';
       });
     });
